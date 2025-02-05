@@ -1,7 +1,9 @@
 package com.music;
 
+import com.music.view.PianoView;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        PianoView pianoView = new PianoView();
     }
 }
