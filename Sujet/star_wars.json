@@ -1,0 +1,326 @@
+[
+  {
+    "note": "La#",
+    "octave": 1,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "La#",
+    "octave": 1,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "La#",
+    "octave": 1,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "Fa",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Do",
+    "octave": 2,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "La#",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Sol",
+    "octave": 2,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "Fa",
+    "octave": 1,
+    "duration": 0.0625
+  },
+  {
+    "note": "Pause",
+    "duration": 0.08125
+  },
+  {
+    "note": "Do",
+    "octave": 1,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La#",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Sol",
+    "octave": 2,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "Fa",
+    "octave": 1,
+    "duration": 0.0625
+  },
+  {
+    "note": "Pause",
+    "duration": 0.08125
+  },
+  {
+    "note": "Do",
+    "octave": 1,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La#",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La#",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Sol",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Do",
+    "octave": 1,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Do",
+    "octave": 1,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Do",
+    "octave": 1,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Fa",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Do",
+    "octave": 2,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "La#",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Sol",
+    "octave": 2,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "Fa",
+    "octave": 1,
+    "duration": 0.0625
+  },
+  {
+    "note": "Pause",
+    "duration": 0.08125
+  },
+  {
+    "note": "Do",
+    "octave": 1,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La#",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "Sol",
+    "octave": 2,
+    "duration": 0.125
+  },
+  {
+    "note": "Pause",
+    "duration": 0.1625
+  },
+  {
+    "note": "Fa",
+    "octave": 1,
+    "duration": 0.0625
+  },
+  {
+    "note": "Pause",
+    "duration": 0.08125
+  },
+  {
+    "note": "Do",
+    "octave": 1,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La#",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  },
+  {
+    "note": "La",
+    "octave": 2,
+    "duration": 0.25
+  },
+  {
+    "note": "Pause",
+    "duration": 0.325
+  }
+]
