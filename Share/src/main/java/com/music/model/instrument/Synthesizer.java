@@ -5,14 +5,14 @@ import lombok.Setter;
 public class Synthesizer extends MidiInstrument {
     private int idMidiInstrument = 0;
 
-    public Synthesizer(int velocity, int idMidiInstrument) {
+    public Synthesizer(int velocity, Integer idMidiInstrument) {
         super(velocity);
-        this.idMidiInstrument = idMidiInstrument;
+        if(idMidiInstrument != null) this.idMidiInstrument = idMidiInstrument;
     }
 
-    public Synthesizer(int idMidiInstrument) {
+    public Synthesizer(Integer idMidiInstrument) {
         super();
-        this.idMidiInstrument = idMidiInstrument;
+        if(idMidiInstrument != null) this.idMidiInstrument = idMidiInstrument;
     }
 
     public Synthesizer() {
