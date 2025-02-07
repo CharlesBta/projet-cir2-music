@@ -1,8 +1,6 @@
 package com.music.model.instrument;
 
-import lombok.Setter;
-
-public class Synthesizer extends MidiInstrument {
+public class Synthesizer extends MidiInstrument{
     private int idMidiInstrument = 0;
 
     public Synthesizer(int velocity, Integer idMidiInstrument) {
