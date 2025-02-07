@@ -11,6 +11,6 @@ public class Main {
         Controller controller = new Controller(new Model());
         PianoView pianoView = new PianoView(controller);
 
-        controller.setInstrument("Drum");
+        controller.setInstrument("Piano");
     }
 }
