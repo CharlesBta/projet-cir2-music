@@ -1,6 +1,7 @@
 package com.music.view;
 
 import com.music.Note;
+import com.music.controller.IController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class PianoView extends JFrame {
+    private IController controller;
     private static final HashMap<Integer, Note> keyToNote = new HashMap<>();
     private static final HashMap<Integer, JButton> keyToButton = new HashMap<>();
     private static final HashSet<Integer> activeKeys = new HashSet<>();
@@ -51,7 +53,8 @@ public class PianoView extends JFrame {
     private JPanel controlPanel;
     private JLayeredPane pianoKeysPanel;
 
-    public PianoView() {
+    public PianoView(IController controller) {
+        this.controller = controller;
         setTitle("Piano Virtuel");
         // Taille de la fenêtre ajustée pour mieux correspondre à l'écran
         setSize(1280, 720);
@@ -105,10 +108,6 @@ public class PianoView extends JFrame {
         requestFocusInWindow();
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new PianoView();
     }
 
     private void initializeKeys() {
@@ -167,6 +166,7 @@ public class PianoView extends JFrame {
             activeKeys.add(keyCode);
             JButton keyButton = keyToButton.get(keyCode);
             if (keyButton != null) keyButton.setBackground(Color.GRAY);
+            if (keyToNote.get(keyCode) != null) this.controller.playNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
         }
     }
 
@@ -174,16 +174,19 @@ public class PianoView extends JFrame {
         activeKeys.remove(keyCode);
         JButton keyButton = keyToButton.get(keyCode);
         if (keyButton != null) resetKeyColor(keyButton);
+        if (keyToNote.get(keyCode) != null) this.controller.stopNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
     }
 
     private void handleMousePress(JButton key, int keyCode) {
         key.setBackground(Color.GRAY);
         requestFocusInWindow();
+        if (keyToNote.get(keyCode) != null) this.controller.playNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
     }
 
     private void handleMouseRelease(JButton key, int keyCode) {
         resetKeyColor(key);
         requestFocusInWindow();
+        if (keyToNote.get(keyCode) != null) this.controller.stopNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
     }
 
     private void resetKeyColor(JButton key) {
@@ -193,6 +196,7 @@ public class PianoView extends JFrame {
     private void changeOctaves(int change) {
         numberOfOctaves = Math.max(-2, Math.min(7, numberOfOctaves + change));
         octaveLabel.setText("Octaves : " + numberOfOctaves);
+        controller.setOctave(this.numberOfOctaves);
         initializeKeys();
         requestFocusInWindow();
     }
