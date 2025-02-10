@@ -15,13 +15,13 @@ public class Main {
         ConverterTxtToJson converter = new ConverterTxtToJson();
         converter.setFilePath("/Users/charlesbta/Documents/GitHub/projet-cir2-music/Sujet/bella_ciao.txt");
 
-
         ReaderJson playJson = new ReaderJson(controller);
 //        playJson.setJsonString(converter.convertFileToJsonString());
         playJson.setFilePath("/Users/charlesbta/Documents/GitHub/projet-cir2-music/Sujet/mario.json");
 
+        Controller controller = new Controller(new Model());
+        PianoView pianoView = new PianoView(controller);
 
         playJson.play();
     }
 }
-
