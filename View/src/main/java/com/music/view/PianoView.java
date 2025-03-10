@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class PianoView extends JFrame {
-    private IController controller;
     private static final HashMap<Integer, Note> keyToNote = new HashMap<>();
     private static final HashMap<Integer, JButton> keyToButton = new HashMap<>();
     private static final HashSet<Integer> activeKeys = new HashSet<>();
@@ -48,6 +47,7 @@ public class PianoView extends JFrame {
         keyToNote.put(whiteKeyCodes[13], new Note(1, "B"));
     }
 
+    private IController controller;
     private int numberOfOctaves = 2;
     private JLabel octaveLabel;
     private JPanel controlPanel;
@@ -166,7 +166,8 @@ public class PianoView extends JFrame {
             activeKeys.add(keyCode);
             JButton keyButton = keyToButton.get(keyCode);
             if (keyButton != null) keyButton.setBackground(Color.GRAY);
-            if (keyToNote.get(keyCode) != null) this.controller.playNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
+            if (keyToNote.get(keyCode) != null)
+                this.controller.playNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
         }
     }
 
@@ -174,19 +175,22 @@ public class PianoView extends JFrame {
         activeKeys.remove(keyCode);
         JButton keyButton = keyToButton.get(keyCode);
         if (keyButton != null) resetKeyColor(keyButton);
-        if (keyToNote.get(keyCode) != null) this.controller.stopNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
+        if (keyToNote.get(keyCode) != null)
+            this.controller.stopNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
     }
 
     private void handleMousePress(JButton key, int keyCode) {
         key.setBackground(Color.GRAY);
         requestFocusInWindow();
-        if (keyToNote.get(keyCode) != null) this.controller.playNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
+        if (keyToNote.get(keyCode) != null)
+            this.controller.playNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
     }
 
     private void handleMouseRelease(JButton key, int keyCode) {
         resetKeyColor(key);
         requestFocusInWindow();
-        if (keyToNote.get(keyCode) != null) this.controller.stopNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
+        if (keyToNote.get(keyCode) != null)
+            this.controller.stopNote(keyToNote.get(keyCode).getOctave(), keyToNote.get(keyCode).getNote());
     }
 
     private void resetKeyColor(JButton key) {
