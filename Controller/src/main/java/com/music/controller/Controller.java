@@ -1,7 +1,7 @@
 package com.music.controller;
 
 import com.music.NoteOffsetCalculator;
-import com.music.InstrumentFactory;
+import com.music.model.instrument.InstrumentFactory;
 import com.music.model.IModel;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ public class Controller implements IController {
 
     public Controller(final IModel model) {
         this.model = model;
-        this.octave = 0;
+        this.octave = 5;
         this.velocity = 64;
     }
 

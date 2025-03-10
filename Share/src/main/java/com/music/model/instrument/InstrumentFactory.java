@@ -1,7 +1,4 @@
-package com.music;
-
-import com.music.model.instrument.IInstrument;
-import com.music.model.instrument.*;
+package com.music.model.instrument;
 
 public abstract class InstrumentFactory {
     public static IInstrument getInstrument(String instrument, Integer velocity) {
