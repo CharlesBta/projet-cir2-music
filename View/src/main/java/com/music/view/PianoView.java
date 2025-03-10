@@ -16,37 +16,12 @@ public class PianoView extends JFrame {
     private static final HashMap<Integer, Note> keyToNote = new HashMap<>();
     private static final HashMap<Integer, JButton> keyToButton = new HashMap<>();
     private static final HashSet<Integer> activeKeys = new HashSet<>();
-    static int[] whiteKeyCodes = {KeyEvent.VK_A, KeyEvent.VK_Z, KeyEvent.VK_E, KeyEvent.VK_R, KeyEvent.VK_T, KeyEvent.VK_Y, KeyEvent.VK_U, KeyEvent.VK_I, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_Q, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F};
-    static int[] blackKeyCodes = {KeyEvent.VK_G, KeyEvent.VK_H, -1, KeyEvent.VK_J, KeyEvent.VK_K, KeyEvent.VK_L, -1, KeyEvent.VK_M, KeyEvent.VK_W, -1, KeyEvent.VK_X, KeyEvent.VK_C, KeyEvent.VK_V, -1};
-
-    static {
-        keyToNote.put(whiteKeyCodes[0], new Note(0, "C"));
-        keyToNote.put(blackKeyCodes[0], new Note(0, "Db"));
-        keyToNote.put(whiteKeyCodes[1], new Note(0, "D"));
-        keyToNote.put(blackKeyCodes[1], new Note(0, "Eb"));
-        keyToNote.put(whiteKeyCodes[2], new Note(0, "E"));
-        keyToNote.put(whiteKeyCodes[3], new Note(0, "F"));
-        keyToNote.put(blackKeyCodes[3], new Note(0, "Gb"));
-        keyToNote.put(whiteKeyCodes[4], new Note(0, "G"));
-        keyToNote.put(blackKeyCodes[4], new Note(0, "Ab"));
-        keyToNote.put(whiteKeyCodes[5], new Note(0, "A"));
-        keyToNote.put(blackKeyCodes[5], new Note(0, "Bb"));
-        keyToNote.put(whiteKeyCodes[6], new Note(0, "B"));
-
-        keyToNote.put(whiteKeyCodes[7], new Note(1, "C"));
-        keyToNote.put(blackKeyCodes[7], new Note(1, "Db"));
-        keyToNote.put(whiteKeyCodes[8], new Note(1, "D"));
-        keyToNote.put(blackKeyCodes[8], new Note(1, "Eb"));
-        keyToNote.put(whiteKeyCodes[9], new Note(1, "E"));
-        keyToNote.put(whiteKeyCodes[10], new Note(1, "F"));
-        keyToNote.put(blackKeyCodes[10], new Note(1, "Gb"));
-        keyToNote.put(whiteKeyCodes[11], new Note(1, "G"));
-        keyToNote.put(blackKeyCodes[11], new Note(1, "Ab"));
-        keyToNote.put(whiteKeyCodes[12], new Note(1, "A"));
-        keyToNote.put(blackKeyCodes[12], new Note(1, "Bb"));
-        keyToNote.put(whiteKeyCodes[13], new Note(1, "B"));
-    }
-
+    private static final int MAX_KEYS_PER_ROW = 21;
+    private static final int WHITE_KEY_WIDTH = 60;
+    private static final int BLACK_KEY_WIDTH = 40;
+    private static final int BLACK_KEY_HEIGHT = 120;
+    private static final int WHITE_KEY_HEIGHT = 200;
+    private static final int ROW_HEIGHT = 250;
     private IController controller;
     private int numberOfOctaves = 2;
     private JLabel octaveLabel;
@@ -56,29 +31,24 @@ public class PianoView extends JFrame {
     public PianoView(IController controller) {
         this.controller = controller;
         setTitle("Piano Virtuel");
-        // Taille de la fenêtre ajustée pour mieux correspondre à l'écran
         setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Créer le panneau principal avec GridBagLayout pour centrer le piano
         JPanel mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // Créer un JLayeredPane pour les touches de piano
         pianoKeysPanel = new JLayeredPane();
-        pianoKeysPanel.setPreferredSize(new Dimension(900, 300)); // Réduire la largeur du piano pour l'adapter à la fenêtre
+        pianoKeysPanel.setPreferredSize(new Dimension(900, 300));
 
-        // Initialiser les touches du piano
         initializeKeys();
 
         mainPanel.add(pianoKeysPanel, gbc);
         add(mainPanel, BorderLayout.CENTER);
 
-        // Créer le panneau de contrôle avec des boutons pour changer le nombre d'octaves
         controlPanel = new JPanel();
         octaveLabel = new JLabel("Octaves : " + numberOfOctaves);
         JButton increaseButton = new JButton("+");
@@ -114,34 +84,54 @@ public class PianoView extends JFrame {
         pianoKeysPanel.removeAll();
         keyToButton.clear();
 
-        int[] whiteKeyPositions = {0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780};
-        int[] blackKeyPositions = {40, 100, -1, 220, 280, 340, -1, 460, 520, -1, 640, 700, 760, -1};
+        String[] whiteNotes = {"C", "D", "E", "F", "G", "A", "B"};
+        String[] blackNotes = {"Db", "Eb", null, "Gb", "Ab", "Bb", null};
 
-        // Créer les touches blanches
-        for (int i = 0; i < whiteKeyPositions.length; i++) {
-            JButton whiteKey = createKey(whiteKeyCodes[i], Color.WHITE, whiteKeyPositions[i], 60, 200);
-            pianoKeysPanel.add(whiteKey, Integer.valueOf(1));
-        }
+        int numWhiteKeys = numberOfOctaves * 7;
+        int numRows = (int) Math.ceil((double) numWhiteKeys / MAX_KEYS_PER_ROW);
 
-        // Créer les touches noires
-        for (int i = 0; i < blackKeyPositions.length; i++) {
-            if (blackKeyPositions[i] != -1) {
-                JButton blackKey = createKey(blackKeyCodes[i], Color.BLACK, blackKeyPositions[i], 40, 120);
-                pianoKeysPanel.add(blackKey, Integer.valueOf(2));
+        int startX = 0;
+        int startY = 50;
+        int row = 0;
+
+        for (int octave = 0; octave < numberOfOctaves; octave++) {
+            for (int i = 0; i < 7; i++) {
+                if (startX >= MAX_KEYS_PER_ROW * WHITE_KEY_WIDTH) {
+                    row++;
+                    startX = 0;
+                    startY += ROW_HEIGHT;
+                }
+
+                int keyCode = KeyEvent.VK_A + (octave * 7) + i;
+                Note note = new Note(octave, whiteNotes[i]);
+                JButton whiteKey = createKey(keyCode, Color.WHITE, startX, startY, WHITE_KEY_WIDTH, WHITE_KEY_HEIGHT);
+                keyToNote.put(keyCode, note);
+                pianoKeysPanel.add(whiteKey, Integer.valueOf(1));
+
+                if (blackNotes[i] != null) {
+                    int blackKeyX = startX + (WHITE_KEY_WIDTH - BLACK_KEY_WIDTH / 2);
+                    int blackKeyCode = KeyEvent.VK_G + (octave * 5) + i;
+                    Note blackNote = new Note(octave, blackNotes[i]);
+                    JButton blackKey = createKey(blackKeyCode, Color.BLACK, blackKeyX, startY, BLACK_KEY_WIDTH, BLACK_KEY_HEIGHT);
+                    keyToNote.put(blackKeyCode, blackNote);
+                    pianoKeysPanel.add(blackKey, Integer.valueOf(2));
+                }
+
+                startX += WHITE_KEY_WIDTH;
             }
         }
 
-        // Mettre à jour le panneau et redessiner les touches
+        pianoKeysPanel.setPreferredSize(new Dimension(Math.min(numWhiteKeys, MAX_KEYS_PER_ROW) * WHITE_KEY_WIDTH, numRows * ROW_HEIGHT));
         pianoKeysPanel.revalidate();
         pianoKeysPanel.repaint();
     }
 
-    private JButton createKey(int keyCode, Color color, int x, int width, int height) {
+    private JButton createKey(int keyCode, Color color, int x, int y, int width, int height) {
         JButton key = new JButton();
         key.setBackground(color);
         key.setForeground(color == Color.WHITE ? Color.BLACK : Color.WHITE);
         key.setFocusPainted(false);
-        key.setBounds(x, 50, width, height);
+        key.setBounds(x, y, width, height);
         key.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         keyToButton.put(keyCode, key);
@@ -194,14 +184,20 @@ public class PianoView extends JFrame {
     }
 
     private void resetKeyColor(JButton key) {
-        key.setBackground(key.getBounds().width == 60 ? Color.WHITE : Color.BLACK);
+        key.setBackground(key.getBounds().width == WHITE_KEY_WIDTH ? Color.WHITE : Color.BLACK);
     }
 
     private void changeOctaves(int change) {
-        numberOfOctaves = Math.max(-2, Math.min(7, numberOfOctaves + change));
+        numberOfOctaves = Math.max(1, Math.min(7, numberOfOctaves + change));
         octaveLabel.setText("Octaves : " + numberOfOctaves);
         controller.setOctave(this.numberOfOctaves);
+
         initializeKeys();
+
+        int newWidth = Math.min(numberOfOctaves * 420, 1280);
+        int newHeight = pianoKeysPanel.getPreferredSize().height + 150;
+        setSize(newWidth, newHeight);
+
         requestFocusInWindow();
     }
 }
