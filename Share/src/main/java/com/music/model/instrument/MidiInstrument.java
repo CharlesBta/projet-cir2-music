@@ -6,7 +6,7 @@ import javax.sound.midi.Synthesizer;
 
 public abstract class MidiInstrument implements IInstrument {
     private Synthesizer synthesizer;
-    MidiChannel channel;
+    protected MidiChannel channel;
     private int velocity;
 
     public MidiInstrument(int velocity) {
