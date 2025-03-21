@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.music.NoteOffsetCalculator;
 import lombok.Setter;
 
+
 @Setter
 public class ConverterTxtToJson {
     private String filePath;
