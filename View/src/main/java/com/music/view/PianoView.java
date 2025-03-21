@@ -190,7 +190,7 @@ public class PianoView extends JFrame {
     private void changeOctaves(int change) {
         numberOfOctaves = Math.max(1, Math.min(7, numberOfOctaves + change));
         octaveLabel.setText("Octaves : " + numberOfOctaves);
-        controller.setOctave(this.numberOfOctaves);
+        //controller.setOctave(this.numberOfOctaves);
 
         initializeKeys();
 

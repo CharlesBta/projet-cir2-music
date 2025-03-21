@@ -1,20 +1,19 @@
 package com.music.controller;
 
-import com.music.NoteOffsetCalculator;
 import com.music.InstrumentFactory;
+import com.music.NoteOffsetCalculator;
 import com.music.model.IModel;
 import lombok.Setter;
 
 public class Controller implements IController {
     private final IModel model;
-    @Setter
-    private int octave;
+    private final int octave;
     @Setter
     private int velocity;
 
     public Controller(final IModel model) {
         this.model = model;
-        this.octave = 0;
+        this.octave = 2;
         this.velocity = 64;
     }
 
@@ -25,6 +24,7 @@ public class Controller implements IController {
             this.model.playNote(
                     noteOffset + (idOctave + this.octave) * 12
             );
+            System.out.println(idOctave);
         }
     }
 
