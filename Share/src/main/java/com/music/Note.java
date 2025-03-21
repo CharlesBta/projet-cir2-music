@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class Note {
+    @Getter
     int octave;
     String note;
 

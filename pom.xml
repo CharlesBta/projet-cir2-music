@@ -12,8 +12,8 @@
         <module>Main</module>
         <module>Share</module>
         <module>Model</module>
-        <module>View</module>
         <module>Controller</module>
+        <module>View</module>
     </modules>
 
     <properties>
