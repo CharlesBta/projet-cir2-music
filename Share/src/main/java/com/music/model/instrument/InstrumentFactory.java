@@ -19,8 +19,4 @@ public abstract class InstrumentFactory {
             default -> null;
         };
     }
-
-    public static IInstrument getInstrument(String instrument) {
-        return getInstrument(instrument, null);
-    }
 }
