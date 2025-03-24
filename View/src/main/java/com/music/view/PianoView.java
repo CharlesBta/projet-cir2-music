@@ -2,6 +2,8 @@ package com.music.view;
 
 import com.music.Note;
 import com.music.controller.IController;
+import com.formdev.flatlaf.FlatLightLaf;
+import org.jdesktop.swingx.JXPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,29 +58,27 @@ public class PianoView extends JFrame {
     public PianoView(IController controller) {
         this.controller = controller;
         setTitle("Piano Virtuel");
-        // Taille de la fenêtre ajustée pour mieux correspondre à l'écran
         setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Créer le panneau principal avec GridBagLayout pour centrer le piano
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+        // Set background color to light blue
+        getContentPane().setBackground(new Color(135, 206, 250));
+
+        JXPanel mainPanel = new JXPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // Créer un JLayeredPane pour les touches de piano
         pianoKeysPanel = new JLayeredPane();
-        pianoKeysPanel.setPreferredSize(new Dimension(900, 300)); // Réduire la largeur du piano pour l'adapter à la fenêtre
+        pianoKeysPanel.setPreferredSize(new Dimension(900, 300));
 
-        // Initialiser les touches du piano
         initializeKeys();
 
         mainPanel.add(pianoKeysPanel, gbc);
         add(mainPanel, BorderLayout.CENTER);
 
-        // Créer le panneau de contrôle avec des boutons pour changer le nombre d'octaves
         controlPanel = new JPanel();
         octaveLabel = new JLabel("Octaves : " + numberOfOctaves);
         JButton increaseButton = new JButton("+");
@@ -107,6 +107,15 @@ public class PianoView extends JFrame {
         setFocusable(true);
         requestFocusInWindow();
         setLocationRelativeTo(null);
+
+        // Apply FlatLaf look and feel
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            SwingUtilities.updateComponentTreeUI(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         setVisible(true);
     }
 
@@ -117,13 +126,11 @@ public class PianoView extends JFrame {
         int[] whiteKeyPositions = {0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780};
         int[] blackKeyPositions = {40, 100, -1, 220, 280, 340, -1, 460, 520, -1, 640, 700, 760, -1};
 
-        // Créer les touches blanches
         for (int i = 0; i < whiteKeyPositions.length; i++) {
             JButton whiteKey = createKey(whiteKeyCodes[i], Color.WHITE, whiteKeyPositions[i], 60, 200);
             pianoKeysPanel.add(whiteKey, Integer.valueOf(1));
         }
 
-        // Créer les touches noires
         for (int i = 0; i < blackKeyPositions.length; i++) {
             if (blackKeyPositions[i] != -1) {
                 JButton blackKey = createKey(blackKeyCodes[i], Color.BLACK, blackKeyPositions[i], 40, 120);
@@ -131,7 +138,6 @@ public class PianoView extends JFrame {
             }
         }
 
-        // Mettre à jour le panneau et redessiner les touches
         pianoKeysPanel.revalidate();
         pianoKeysPanel.repaint();
     }
