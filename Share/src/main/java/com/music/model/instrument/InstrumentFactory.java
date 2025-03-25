@@ -1,9 +1,5 @@
 package com.music.model.instrument;
 
-import com.music.model.instrument.IInstrument;
-import com.music.model.instrument.Synthesizer;
-import com.music.model.instrument.VideoGame;
-
 public abstract class InstrumentFactory {
     public static IInstrument getInstrument(String instrument) {
         return getInstrument(instrument, null);
@@ -20,3 +16,4 @@ public abstract class InstrumentFactory {
         };
     }
 }
+
