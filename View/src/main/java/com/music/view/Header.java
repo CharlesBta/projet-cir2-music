@@ -2,6 +2,7 @@ package com.music.view;
 
 import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -57,10 +58,19 @@ public class Header {
             @Override
             public void mouseClicked(MouseEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
+
+                // Create a file filter for .json and .txt files
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON & Text Files", "json", "txt");
+                fileChooser.setFileFilter(filter);
+
                 int result = fileChooser.showOpenDialog(frame);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                    if (selectedFile.getName().endsWith(".json") || selectedFile.getName().endsWith(".txt")) {
+                        System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Erreur: Veuillez sélectionner un fichier .json ou .txt", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
 
