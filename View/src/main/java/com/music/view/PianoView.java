@@ -82,7 +82,7 @@ public class PianoView extends JFrame {
     }
 
     private void removePianoKeyPanel() {
-        if (numberOfPanels > 0) {
+        if (numberOfPanels > 1) {
             if (pianoContainer.getComponentCount() > 0) {
                 pianoContainer.remove(pianoContainer.getComponentCount() - 1);
                 mainPanel.revalidate();
