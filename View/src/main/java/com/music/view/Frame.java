@@ -4,9 +4,10 @@ import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.*;
 
-public class Frame {
+public class Frame extends JFrame {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
+    private Header header;
 
     public Frame() {
         initializeUI();
@@ -26,17 +27,24 @@ public class Frame {
     }
 
     private void createAndShowFrame() {
-        JFrame frame = new JFrame("Piano Virtuel");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(WIDTH, HEIGHT);
-        frame.setLocationRelativeTo(null);
+        setTitle("Piano Virtuel");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(WIDTH, HEIGHT);
+        setLocationRelativeTo(null);
+        getContentPane().setBackground(Color.WHITE);
+        setLayout(new BorderLayout());
 
-        frame.getContentPane().setBackground(Color.WHITE);
+        header = new Header(this);
+        add(header.getHeaderPanel(), BorderLayout.WEST);
 
-        Header header = new Header();
-        frame.add(header.getHeaderPanel(), BorderLayout.WEST);
-
-        frame.setVisible(true);
+        setVisible(true);
     }
 
+    public void updateFrameContent(JPanel newContent) {
+        getContentPane().removeAll();
+        add(header.getHeaderPanel(), BorderLayout.WEST);
+        add(newContent, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
 }

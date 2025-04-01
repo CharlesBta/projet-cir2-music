@@ -7,18 +7,24 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.prefs.Preferences;
 
 public class Header {
 
     private JPanel headerPanel;
+    private Frame frame;
+    private File lastDirectory;
+    private static final Preferences prefs = Preferences.userNodeForPackage(Header.class);
 
-    public Header() {
+    public Header(Frame frame) {
+        this.frame = frame;
         initializeUI();
     }
 
     private void initializeUI() {
         setLookAndFeel();
         createHeaderPanel();
+        loadLastDirectory();
     }
 
     private void setLookAndFeel() {
@@ -47,7 +53,10 @@ public class Header {
         headerPanel.add(menuButton);
 
         JButton quitButton = createStyledButton("Quit");
-        quitButton.addActionListener(e -> System.exit(0));
+        quitButton.addActionListener(e -> {
+            saveLastDirectory();
+            System.exit(0);
+        });
         headerPanel.add(quitButton);
     }
 
@@ -85,6 +94,9 @@ public class Header {
         @Override
         public void mouseClicked(MouseEvent e) {
             JFileChooser fileChooser = new JFileChooser();
+            if (lastDirectory != null) {
+                fileChooser.setCurrentDirectory(lastDirectory);
+            }
             fileChooser.setFileFilter(new FileNameExtensionFilter("JSON & Text Files", "json", "txt"));
 
             int result = fileChooser.showOpenDialog(null);
@@ -92,6 +104,12 @@ public class Header {
                 File selectedFile = fileChooser.getSelectedFile();
                 if (isJsonOrTxtFile(selectedFile)) {
                     System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                    lastDirectory = selectedFile.getParentFile();
+                    saveLastDirectory();
+                    SwingUtilities.invokeLater(() -> {
+                        OuvrirPartition partitionPanel = new OuvrirPartition();
+                        frame.updateFrameContent(partitionPanel);
+                    });
                 } else {
                     showErrorDialog("Erreur: Veuillez sélectionner un fichier .json ou .txt");
                 }
@@ -125,6 +143,19 @@ public class Header {
         component.setPreferredSize(new Dimension(130, 30));
         if (component instanceof AbstractButton) {
             ((AbstractButton) component).setHorizontalAlignment(SwingConstants.CENTER);
+        }
+    }
+
+    private void loadLastDirectory() {
+        String path = prefs.get("lastDirectory", null);
+        if (path != null) {
+            lastDirectory = new File(path);
+        }
+    }
+
+    private void saveLastDirectory() {
+        if (lastDirectory != null) {
+            prefs.put("lastDirectory", lastDirectory.getAbsolutePath());
         }
     }
 

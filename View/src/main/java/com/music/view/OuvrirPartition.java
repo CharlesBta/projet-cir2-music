@@ -7,10 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class OuvrirPartition extends JFrame {
+public class OuvrirPartition extends JPanel {
 
-    private static final int FRAME_WIDTH = 1280;
-    private static final int FRAME_HEIGHT = 720;
     private static final int INSETS = 20;
     private static final int LABEL_FONT_SIZE = 30;
     private static final int BUTTON_FONT_SIZE = 24;
@@ -20,7 +18,7 @@ public class OuvrirPartition extends JFrame {
     private static final int ICON_HEIGHT = 60;
     private static final int IMAGE_BUTTON_WIDTH = 120;
     private static final int IMAGE_BUTTON_HEIGHT = 90;
-    private static final Color BACKGROUND_COLOR = new Color(240, 240, 240);
+    private static final Color BACKGROUND_COLOR = new Color(255, 255, 255);
     private static final Color BUTTON_COLOR = new Color(200, 200, 200);
     private static final Color HOVER_COLOR = new Color(180, 180, 180);
 
@@ -28,10 +26,6 @@ public class OuvrirPartition extends JFrame {
     private final JButton instrumentSelector;
 
     public OuvrirPartition() {
-        setTitle("Ouvrir Partition");
-        setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(INSETS, INSETS, INSETS, INSETS);
@@ -109,8 +103,8 @@ public class OuvrirPartition extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         add(controlPanel, gbc);
 
-        // Set background color for the frame
-        getContentPane().setBackground(BACKGROUND_COLOR);
+        // Set background color for the panel
+        setBackground(BACKGROUND_COLOR);
     }
 
     private static void styleAsButton(JComponent component) {
