@@ -32,6 +32,7 @@ public class Header {
     private void createHeaderPanel() {
         headerPanel = new JPanel();
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        headerPanel.setBackground(Color.WHITE);
 
         JButton headerButton = createStyledButton("Instruments");
         headerPanel.add(headerButton);
