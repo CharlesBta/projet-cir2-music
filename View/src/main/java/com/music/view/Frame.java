@@ -8,6 +8,7 @@ public class Frame extends JFrame {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
     private Header header;
+    private JLayeredPane layeredPane;
 
     public Frame() {
         initializeUI();
@@ -32,19 +33,31 @@ public class Frame extends JFrame {
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
         getContentPane().setBackground(Color.WHITE);
+
         setLayout(new BorderLayout());
 
         header = new Header(this);
-        add(header.getHeaderPanel(), BorderLayout.WEST);
+        add(header.getHeaderPanel(), BorderLayout.NORTH);
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setLayout(new GridBagLayout());
+        add(layeredPane, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
     public void updateFrameContent(JPanel newContent) {
-        getContentPane().removeAll();
-        add(header.getHeaderPanel(), BorderLayout.WEST);
-        add(newContent, BorderLayout.CENTER);
-        revalidate();
-        repaint();
+        layeredPane.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        layeredPane.add(newContent, gbc);
+        layeredPane.revalidate();
+        layeredPane.repaint();
     }
 }
