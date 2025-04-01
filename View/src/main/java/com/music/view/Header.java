@@ -51,7 +51,6 @@ public class Header {
                 headerButton.setBackground(Color.LIGHT_GRAY);
             }
         });
-
         JButton openButton = new JButton("Ouvrir");
         styleAsButton(openButton);
         openButton.addMouseListener(new MouseAdapter() {
