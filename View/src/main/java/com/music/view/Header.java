@@ -9,96 +9,112 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 public class Header {
-    public static void main(String[] args) {
+
+    private JPanel headerPanel;
+
+    public Header() {
+        initializeUI();
+    }
+
+    private void initializeUI() {
+        setLookAndFeel();
+        createHeaderPanel();
+    }
+
+    private void setLookAndFeel() {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
+    }
 
-        JFrame frame = new JFrame("Instrument Selector");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1280, 720);
-        frame.setLayout(new BorderLayout());
-
-        JPanel headerPanel = new JPanel();
+    private void createHeaderPanel() {
+        headerPanel = new JPanel();
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JButton headerButton = new JButton("Instruments");
-        styleAsButton(headerButton);
+        JButton headerButton = createStyledButton("Instruments");
         headerPanel.add(headerButton);
+        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Guitare"});
 
-        JPopupMenu popupMenu = new JPopupMenu();
-        String[] instruments = {"Piano", "Xylophone", "Guitare"};
-        for (String instrument : instruments) {
-            JMenuItem item = new JMenuItem(instrument);
-            popupMenu.add(item);
-        }
-
-        headerButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                popupMenu.show(headerButton, 0, headerButton.getHeight());
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                headerButton.setBackground(Color.GRAY);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                headerButton.setBackground(Color.LIGHT_GRAY);
-            }
-        });
-        JButton openButton = new JButton("Ouvrir");
-        styleAsButton(openButton);
-        openButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-
-                // Create a file filter for .json and .txt files
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON & Text Files", "json", "txt");
-                fileChooser.setFileFilter(filter);
-
-                int result = fileChooser.showOpenDialog(frame);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    if (selectedFile.getName().endsWith(".json") || selectedFile.getName().endsWith(".txt")) {
-                        System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Erreur: Veuillez sélectionner un fichier .json ou .txt", "Erreur", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                openButton.setBackground(Color.GRAY);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                openButton.setBackground(Color.LIGHT_GRAY);
-            }
-        });
+        JButton openButton = createStyledButton("Ouvrir");
+        openButton.addMouseListener(new FileChooserMouseAdapter());
         headerPanel.add(openButton);
 
-        JButton menuButton = new JButton("Menu");
-        styleAsButton(menuButton);
+        JButton menuButton = createStyledButton("Menu");
         menuButton.addActionListener(e -> System.out.println("menu"));
         headerPanel.add(menuButton);
 
-        JButton quitButton = new JButton("Quit");
-        styleAsButton(quitButton);
+        JButton quitButton = createStyledButton("Quit");
         quitButton.addActionListener(e -> System.exit(0));
         headerPanel.add(quitButton);
+    }
 
-        frame.add(headerPanel, BorderLayout.WEST);
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        styleAsButton(button);
+        return button;
+    }
 
-        frame.setVisible(true);
-        frame.requestFocus();
+    private void addPopupMenuToButton(JButton button, String[] items) {
+        JPopupMenu popupMenu = new JPopupMenu();
+        for (String item : items) {
+            popupMenu.add(new JMenuItem(item));
+        }
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                popupMenu.show(button, 0, button.getHeight());
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(Color.GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.LIGHT_GRAY);
+            }
+        });
+    }
+
+    private class FileChooserMouseAdapter extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("JSON & Text Files", "json", "txt"));
+
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                if (isJsonOrTxtFile(selectedFile)) {
+                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                } else {
+                    showErrorDialog("Erreur: Veuillez sélectionner un fichier .json ou .txt");
+                }
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            ((JButton) e.getSource()).setBackground(Color.GRAY);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            ((JButton) e.getSource()).setBackground(Color.LIGHT_GRAY);
+        }
+    }
+
+    private boolean isJsonOrTxtFile(File file) {
+        String fileName = file.getName().toLowerCase();
+        return fileName.endsWith(".json") || fileName.endsWith(".txt");
+    }
+
+    private void showErrorDialog(String message) {
+        JOptionPane.showMessageDialog(null, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
 
     private static void styleAsButton(JComponent component) {
@@ -109,5 +125,9 @@ public class Header {
         if (component instanceof AbstractButton) {
             ((AbstractButton) component).setHorizontalAlignment(SwingConstants.CENTER);
         }
+    }
+
+    public JPanel getHeaderPanel() {
+        return headerPanel;
     }
 }
