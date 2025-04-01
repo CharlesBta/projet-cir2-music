@@ -14,7 +14,7 @@ public class Main {
 
         controller.setInstrument("Piano");
 
-        PianoView pianoView = new PianoView(controller);
+        PianoView pianoView = new PianoView();
         pianoView.setVisible(true);
 
     }

@@ -1,94 +1,61 @@
 package com.music.view;
 
-import com.music.controller.IController;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PianoView extends JFrame {
-    private IController controller;
-    private JPanel mainPanel;
-    private JPanel pianoContainer;
-    private int numberOfPanels;
+public class PianoView extends JFrame implements ActionListener {
+    private JPanel pianoPanel;
+    private JButton addPianoButton;
+    private JButton removePianoButton;
 
-    public PianoView(IController controller) {
-        this.controller = controller;
-        this.numberOfPanels = 3; // Initialiser avec 3 octaves
-        setTitle("Piano Virtuel");
-        setSize(1280, 720);
+    public PianoView() {
+        setTitle("Piano View");
+        setSize(800, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout());
 
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout()); // Utiliser GridBagLayout
-        add(mainPanel, BorderLayout.CENTER);
+        pianoPanel = new PianoPanel();
+        addPianoButton = new JButton("+");
+        removePianoButton = new JButton("-");
 
-        JPanel controlPanel = new JPanel();
-        JButton addButton = new JButton("+");
-        JButton removeButton = new JButton("-");
-        controlPanel.add(addButton);
-        controlPanel.add(removeButton);
-        add(controlPanel, BorderLayout.NORTH);
+        addPianoButton.addActionListener(this);
+        removePianoButton.addActionListener(this);
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addPianoKeyPanel();
-            }
+        add(pianoPanel);
+        add(addPianoButton);
+        add(removePianoButton);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addPianoButton) {
+            addPiano();
+        } else if (e.getSource() == removePianoButton) {
+            removePiano();
+        }
+    }
+
+    private void addPiano() {
+        PianoPanel newPianoPanel = new PianoPanel();
+        add(newPianoPanel);
+        revalidate();
+        repaint();
+    }
+
+    private void removePiano() {
+        if (getContentPane().getComponentCount() > 3) {
+            getContentPane().remove(getContentPane().getComponentCount() - 1);
+            revalidate();
+            repaint();
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            PianoView pianoView = new PianoView();
+            pianoView.setVisible(true);
         });
-
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removePianoKeyPanel();
-            }
-        });
-
-        pianoContainer = new JPanel();
-        pianoContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Utiliser FlowLayout sans écart
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        gbc.anchor = GridBagConstraints.CENTER;
-
-        mainPanel.add(pianoContainer, gbc);
-
-        addPianoKeyPanels(numberOfPanels);
-
-        setVisible(true);
-    }
-
-    private void addPianoKeyPanels(int numberOfPanels) {
-        for (int i = 0; i < numberOfPanels; i++) {
-            PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, i);
-            pianoContainer.add(pianoKeyPanel);
-        }
-        mainPanel.revalidate();
-        mainPanel.repaint();
-    }
-
-    private void addPianoKeyPanel() {
-        if (numberOfPanels < 3) { // Limiter à 3 panneaux
-            PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, numberOfPanels);
-            pianoContainer.add(pianoKeyPanel);
-            mainPanel.revalidate();
-            mainPanel.repaint();
-            numberOfPanels++;
-        }
-    }
-
-    private void removePianoKeyPanel() {
-        if (numberOfPanels > 1) {
-            if (pianoContainer.getComponentCount() > 0) {
-                pianoContainer.remove(pianoContainer.getComponentCount() - 1);
-                mainPanel.revalidate();
-                mainPanel.repaint();
-                numberOfPanels--;
-            }
-        }
     }
 }
