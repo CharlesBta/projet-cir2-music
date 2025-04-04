@@ -1,4 +1,4 @@
-package com.music.view;
+package com.music.view.piano;
 
 import com.music.controller.IController;
 
@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.KeyboardFocusManager;
 
-public class PianoView extends JFrame {
+public class PianoPanel extends JPanel {
     private IController controller;
     private JPanel mainPanel;
     private JPanel pianoContainer;
@@ -17,20 +17,14 @@ public class PianoView extends JFrame {
     private JComboBox<String> pianoSelector;
     private PianoKeyPanel activePianoPanel;
 
-    public PianoView(IController controller) {
+    public PianoPanel(IController controller) {
         this.controller = controller;
-        this.numberOfPanels = 3; // Initialiser avec 3 octaves
-        setTitle("Piano Virtuel");
-        setSize(1280, 720);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.numberOfPanels = 1; // Initialiser avec 1 octave
         setLayout(new BorderLayout());
 
-        // Panneau principal avec BoxLayout pour centrer verticalement
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        add(mainPanel, BorderLayout.CENTER);
 
-        // Panneau de contrôle centré horizontalement
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton addButton = new JButton("+");
         JButton removeButton = new JButton("-");
@@ -51,7 +45,6 @@ public class PianoView extends JFrame {
         mainPanel.add(controlPanel);
         mainPanel.add(Box.createVerticalStrut(20)); // Espace fixe entre les contrôles et le piano
 
-        // Panneau contenant les pianos avec FlowLayout pour centrer horizontalement
         pianoContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         mainPanel.add(pianoContainer);
 
@@ -89,7 +82,7 @@ public class PianoView extends JFrame {
             }
         });
 
-        setVisible(true);
+        add(mainPanel, BorderLayout.CENTER);
     }
 
     private void addPianoKeyPanels(int numberOfPanels) {
@@ -104,27 +97,23 @@ public class PianoView extends JFrame {
     }
 
     private void addPianoKeyPanel() {
-        if (numberOfPanels < 3) { // Limiter à 3 panneaux
-            PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, numberOfPanels);
-            pianoContainer.add(pianoKeyPanel);
-            pianoSelector.addItem("Piano " + (numberOfPanels + 1));
-            updateActivePianoPanel();
-            mainPanel.revalidate();
-            mainPanel.repaint();
-            numberOfPanels++;
-        }
+        PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, numberOfPanels);
+        pianoContainer.add(pianoKeyPanel);
+        pianoSelector.addItem("Piano " + (numberOfPanels + 1));
+        updateActivePianoPanel();
+        mainPanel.revalidate();
+        mainPanel.repaint();
+        numberOfPanels++;
     }
 
     private void removePianoKeyPanel() {
         if (numberOfPanels > 1) {
-            if (pianoContainer.getComponentCount() > 0) {
-                pianoContainer.remove(pianoContainer.getComponentCount() - 1);
-                pianoSelector.removeItemAt(pianoSelector.getItemCount() - 1);
-                updateActivePianoPanel();
-                mainPanel.revalidate();
-                mainPanel.repaint();
-                numberOfPanels--;
-            }
+            pianoContainer.remove(pianoContainer.getComponentCount() - 1);
+            pianoSelector.removeItemAt(pianoSelector.getItemCount() - 1);
+            updateActivePianoPanel();
+            mainPanel.revalidate();
+            mainPanel.repaint();
+            numberOfPanels--;
         }
     }
 

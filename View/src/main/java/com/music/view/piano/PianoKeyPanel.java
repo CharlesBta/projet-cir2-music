@@ -1,4 +1,4 @@
-package com.music.view;
+package com.music.view.piano;
 
 import com.music.controller.IController;
 
