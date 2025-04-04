@@ -25,7 +25,7 @@ public class OuvrirPartition extends JPanel {
     private final JLabel fileNameLabel;
     private final JButton instrumentSelector;
 
-    public OuvrirPartition() {
+    public OuvrirPartition(String fileName) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(INSETS, INSETS, INSETS, INSETS);
@@ -73,7 +73,7 @@ public class OuvrirPartition extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         add(instrumentSelector, gbc);
 
-        fileNameLabel = new JLabel("Aucun fichier ouvert", SwingConstants.CENTER);
+        fileNameLabel = new JLabel(fileName, SwingConstants.CENTER);
         fileNameLabel.setFont(new Font("Arial", Font.PLAIN, BUTTON_FONT_SIZE));
 
         gbc.gridx = 0;
