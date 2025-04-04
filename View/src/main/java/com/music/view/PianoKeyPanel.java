@@ -4,12 +4,17 @@ import com.music.controller.IController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 public class PianoKeyPanel extends JLayeredPane {
+
     private int octave = 0;
+    private static final Color ACTIVE_WHITE = new Color(255, 200, 200); // Légèrement rosé
+    private static final Color ACTIVE_BLACK = new Color(100, 0, 0); // Rouge foncé
+    private static final Color PRESSED_COLOR = Color.GRAY; // Couleur lorsque la touche est pressée
 
     private static final int[] whiteKeyPositions = {0, 60, 120, 180, 240, 300, 360};
     private static final int[] blackKeyPositions = {40, 100, -1, 220, 280, 340, -1};
@@ -18,6 +23,7 @@ public class PianoKeyPanel extends JLayeredPane {
 
     private HashMap<String, JButton> noteToButton = new HashMap<>();
     private IController controller;
+    private boolean isActive = false;
 
     public PianoKeyPanel(IController controller, int octave) {
         this.controller = controller;
@@ -74,16 +80,84 @@ public class PianoKeyPanel extends JLayeredPane {
     }
 
     private void handleMousePress(JButton key, String note) {
-        key.setBackground(Color.GRAY);
+        key.setBackground(PRESSED_COLOR);
         if (controller != null && note != null) {
             controller.playNote(this.octave, note); // Ajuster si nécessaire
         }
     }
 
     private void handleMouseRelease(JButton key, String note) {
-        key.setBackground(key.getForeground() == Color.BLACK ? Color.WHITE : Color.BLACK);
+        if (isActive) {
+            key.setBackground(key.getForeground() == Color.BLACK ? ACTIVE_WHITE : ACTIVE_BLACK);
+        } else {
+            key.setBackground(key.getForeground() == Color.BLACK ? Color.WHITE : Color.BLACK);
+        }
         if (controller != null && note != null) {
             controller.stopNote(this.octave, note); // Ajuster si nécessaire
+        }
+    }
+
+    public void handleKeyPress(KeyEvent e) {
+        char keyChar = e.getKeyChar();
+        String note = getNoteFromKeyChar(keyChar);
+        if (note != null) {
+            JButton keyButton = noteToButton.get(note);
+            if (keyButton != null) {
+                handleMousePress(keyButton, note);
+            }
+        }
+    }
+
+    public void handleKeyRelease(KeyEvent e) {
+        char keyChar = e.getKeyChar();
+        String note = getNoteFromKeyChar(keyChar);
+        if (note != null) {
+            JButton keyButton = noteToButton.get(note);
+            if (keyButton != null) {
+                handleMouseRelease(keyButton, note);
+            }
+        }
+    }
+
+    private String getNoteFromKeyChar(final char keyChar) {
+        switch (keyChar) {
+            case 'q':
+                return "C";
+            case 'z':
+                return "C#";
+            case 's':
+                return "D";
+            case 'e':
+                return "D#";
+            case 'd':
+                return "E";
+            case 'f':
+                return "F";
+            case 't':
+                return "F#";
+            case 'g':
+                return "G";
+            case 'y':
+                return "G#";
+            case 'h':
+                return "A";
+            case 'u':
+                return "A#";
+            case 'j':
+                return "B";
+            default:
+                return null;
+        }
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+        for (JButton key : noteToButton.values()) {
+            if (key.getBackground() == Color.WHITE || key.getBackground() == ACTIVE_WHITE) {
+                key.setBackground(isActive ? ACTIVE_WHITE : Color.WHITE);
+            } else if (key.getBackground() == Color.BLACK || key.getBackground() == ACTIVE_BLACK) {
+                key.setBackground(isActive ? ACTIVE_BLACK : Color.BLACK);
+            }
         }
     }
 }

@@ -6,12 +6,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.KeyboardFocusManager;
 
 public class PianoView extends JFrame {
     private IController controller;
     private JPanel mainPanel;
     private JPanel pianoContainer;
     private int numberOfPanels;
+    private JComboBox<String> pianoSelector;
+    private PianoKeyPanel activePianoPanel;
 
     public PianoView(IController controller) {
         this.controller = controller;
@@ -21,17 +25,41 @@ public class PianoView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // Panneau principal avec BoxLayout pour centrer verticalement
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout()); // Utiliser GridBagLayout
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         add(mainPanel, BorderLayout.CENTER);
 
-        JPanel controlPanel = new JPanel();
+        // Panneau de contrôle centré horizontalement
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton addButton = new JButton("+");
         JButton removeButton = new JButton("-");
         controlPanel.add(addButton);
         controlPanel.add(removeButton);
-        add(controlPanel, BorderLayout.NORTH);
 
+        pianoSelector = new JComboBox<>();
+        pianoSelector.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateActivePianoPanel();
+            }
+        });
+        controlPanel.add(new JLabel("Sélectionnez le piano actif:"));
+        controlPanel.add(pianoSelector);
+
+        mainPanel.add(Box.createVerticalGlue()); // Espace flexible au-dessus
+        mainPanel.add(controlPanel);
+        mainPanel.add(Box.createVerticalStrut(20)); // Espace fixe entre les contrôles et le piano
+
+        // Panneau contenant les pianos avec FlowLayout pour centrer horizontalement
+        pianoContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        mainPanel.add(pianoContainer);
+
+        mainPanel.add(Box.createVerticalGlue()); // Espace flexible en dessous
+
+        addPianoKeyPanels(numberOfPanels);
+
+        // Ajouter des écouteurs aux boutons d'ajout et de suppression
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -46,18 +74,20 @@ public class PianoView extends JFrame {
             }
         });
 
-        pianoContainer = new JPanel();
-        pianoContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Utiliser FlowLayout sans écart
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        gbc.anchor = GridBagConstraints.CENTER;
-
-        mainPanel.add(pianoContainer, gbc);
-
-        addPianoKeyPanels(numberOfPanels);
+        // Utiliser un KeyEventDispatcher pour capturer les événements de clavier au niveau global
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if (activePianoPanel != null) {
+                    if (e.getID() == KeyEvent.KEY_PRESSED) {
+                        activePianoPanel.handleKeyPress(e);
+                    } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+                        activePianoPanel.handleKeyRelease(e);
+                    }
+                }
+                return false;
+            }
+        });
 
         setVisible(true);
     }
@@ -66,7 +96,9 @@ public class PianoView extends JFrame {
         for (int i = 0; i < numberOfPanels; i++) {
             PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, i);
             pianoContainer.add(pianoKeyPanel);
+            pianoSelector.addItem("Piano " + (i + 1));
         }
+        updateActivePianoPanel();
         mainPanel.revalidate();
         mainPanel.repaint();
     }
@@ -75,6 +107,8 @@ public class PianoView extends JFrame {
         if (numberOfPanels < 3) { // Limiter à 3 panneaux
             PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, numberOfPanels);
             pianoContainer.add(pianoKeyPanel);
+            pianoSelector.addItem("Piano " + (numberOfPanels + 1));
+            updateActivePianoPanel();
             mainPanel.revalidate();
             mainPanel.repaint();
             numberOfPanels++;
@@ -85,10 +119,23 @@ public class PianoView extends JFrame {
         if (numberOfPanels > 1) {
             if (pianoContainer.getComponentCount() > 0) {
                 pianoContainer.remove(pianoContainer.getComponentCount() - 1);
+                pianoSelector.removeItemAt(pianoSelector.getItemCount() - 1);
+                updateActivePianoPanel();
                 mainPanel.revalidate();
                 mainPanel.repaint();
                 numberOfPanels--;
             }
+        }
+    }
+
+    private void updateActivePianoPanel() {
+        int selectedIndex = pianoSelector.getSelectedIndex();
+        for (int i = 0; i < pianoContainer.getComponentCount(); i++) {
+            PianoKeyPanel pianoKeyPanel = (PianoKeyPanel) pianoContainer.getComponent(i);
+            pianoKeyPanel.setActive(i == selectedIndex);
+        }
+        if (selectedIndex != -1) {
+            activePianoPanel = (PianoKeyPanel) pianoContainer.getComponent(selectedIndex);
         }
     }
 }

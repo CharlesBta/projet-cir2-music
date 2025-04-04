@@ -7,15 +7,15 @@ import com.music.view.ConverterTxtToJson;
 import com.music.view.PianoView;
 import com.music.view.ReaderJson;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 public class Main {
     public static void main(String[] args) {
-        Model model = new Model();
-        Controller controller = new Controller(model);
-
+        Controller controller = new Controller(new Model());
+        PianoView pianoView = new PianoView(controller);
         controller.setInstrument("Piano");
 
-        PianoView pianoView = new PianoView(controller);
-        pianoView.setVisible(true);
 
     }
 }
