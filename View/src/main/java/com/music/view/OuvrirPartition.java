@@ -2,8 +2,6 @@ package com.music.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -42,7 +40,7 @@ public class OuvrirPartition extends JPanel {
         String[] instruments = {"Piano", "Xylophone", "Game Music"};
         for (String instrument : instruments) {
             JMenuItem item = new JMenuItem(instrument);
-            item.addActionListener(new InstrumentSelectionListener(instrument));
+            item.addActionListener(new InstrumentSelectionListener(instrument, this));
             popupMenu.add(item);
         }
 
@@ -107,6 +105,11 @@ public class OuvrirPartition extends JPanel {
         setBackground(BACKGROUND_COLOR);
     }
 
+    public void setInstrument(String instrument) {
+        instrumentSelector.setText(instrument);
+        System.out.println("Instrument selected: " + instrument);
+    }
+
     private static void styleAsButton(JComponent component) {
         component.setOpaque(true);
         component.setBackground(BUTTON_COLOR);
@@ -147,18 +150,5 @@ public class OuvrirPartition extends JPanel {
         });
 
         return button;
-    }
-
-    private class InstrumentSelectionListener implements ActionListener {
-        private final String instrument;
-
-        public InstrumentSelectionListener(String instrument) {
-            this.instrument = instrument;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            instrumentSelector.setText(instrument);
-        }
     }
 }
