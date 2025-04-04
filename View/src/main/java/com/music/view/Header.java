@@ -2,17 +2,23 @@ package com.music.view;
 
 import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.music.controller.IController;
+import lombok.Getter;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Header {
 
+    @Getter
     private JPanel headerPanel;
     private Frame frame;
+    private IController controller;
 
-    public Header(Frame frame) {
+    public Header(Frame frame, IController controller) {
         this.frame = frame;
+        this.controller = controller;
         initializeUI();
     }
 
@@ -39,7 +45,7 @@ public class Header {
         addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Guitare"});
 
         JButton openButton = createStyledButton("Ouvrir");
-        openButton.addMouseListener(new FileChooserMouseAdapter(frame));
+        openButton.addMouseListener(new FileChooserMouseAdapter(frame, controller));
         headerPanel.add(openButton);
 
         JButton menuButton = createStyledButton("Menu");
@@ -60,7 +66,9 @@ public class Header {
     private void addPopupMenuToButton(JButton button, String[] items) {
         JPopupMenu popupMenu = new JPopupMenu();
         for (String item : items) {
-            popupMenu.add(new JMenuItem(item));
+            JMenuItem menuItem = new JMenuItem(item);
+            menuItem.addActionListener(e -> controller.setInstrument(item));
+            popupMenu.add(menuItem);
         }
 
         button.addMouseListener(new MouseAdapter() {
@@ -89,9 +97,5 @@ public class Header {
         if (component instanceof AbstractButton) {
             ((AbstractButton) component).setHorizontalAlignment(SwingConstants.CENTER);
         }
-    }
-
-    public JPanel getHeaderPanel() {
-        return headerPanel;
     }
 }

@@ -1,5 +1,7 @@
 package com.music.view;
 
+import com.music.controller.IController;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -11,10 +13,12 @@ import java.util.prefs.Preferences;
 public class FileChooserMouseAdapter extends MouseAdapter {
 
     private final Frame frame;
+    private final IController controller;
     private File lastDirectory;
 
-    public FileChooserMouseAdapter(Frame frame) {
+    public FileChooserMouseAdapter(Frame frame, IController controller) {
         this.frame = frame;
+        this.controller = controller;
         loadLastDirectory();
     }
 
@@ -33,8 +37,12 @@ public class FileChooserMouseAdapter extends MouseAdapter {
                 System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                 lastDirectory = selectedFile.getParentFile();
                 saveLastDirectory();
+
+                ReaderJson readerJson = new ReaderJson(controller);
+                readerJson.setFilePath(selectedFile.getAbsolutePath());
+
                 SwingUtilities.invokeLater(() -> {
-                    OuvrirPartition partitionPanel = new OuvrirPartition(selectedFile.getName());
+                    OuvrirPartition partitionPanel = new OuvrirPartition(selectedFile.getName(), controller, readerJson);
                     frame.updateFrameContent(partitionPanel);
                 });
             } else {

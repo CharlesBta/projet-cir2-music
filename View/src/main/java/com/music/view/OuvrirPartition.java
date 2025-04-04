@@ -1,5 +1,7 @@
 package com.music.view;
 
+import com.music.controller.IController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -22,8 +24,12 @@ public class OuvrirPartition extends JPanel {
 
     private final JLabel fileNameLabel;
     private final JButton instrumentSelector;
+    private final IController controller;
+    private ReaderJson reader;
 
-    public OuvrirPartition(String fileName) {
+    public OuvrirPartition(String fileName, final IController controller, ReaderJson reader) {
+        this.controller = controller;
+        this.reader = reader;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(INSETS, INSETS, INSETS, INSETS);
@@ -37,10 +43,10 @@ public class OuvrirPartition extends JPanel {
         styleAsButton(instrumentSelector);
 
         JPopupMenu popupMenu = new JPopupMenu();
-        String[] instruments = {"Piano", "Xylophone", "Game Music"};
+        String[] instruments = {"Piano", "Xylophone", "Video Game"};
         for (String instrument : instruments) {
             JMenuItem item = new JMenuItem(instrument);
-            item.addActionListener(new InstrumentSelectionListener(instrument, this));
+            item.addActionListener(e -> setInstrument(instrument));
             popupMenu.add(item);
         }
 
@@ -87,13 +93,17 @@ public class OuvrirPartition extends JPanel {
         add(fileNameLabel, gbc);
 
         JButton playButton = createStyledButtonWithIcon("view/src/images/play.png", ICON_WIDTH, ICON_HEIGHT, "Play");
-        JButton pauseButton = createStyledButtonWithIcon("view/src/images/pause.png", ICON_WIDTH, ICON_HEIGHT, "Pause");
-        JButton replayButton = createStyledButtonWithIcon("view/src/images/replay.png", ICON_WIDTH, ICON_HEIGHT, "Replay");
+
+        playButton.addActionListener(
+                e -> {
+                    System.out.println("Play button clicked");
+                    reader.play();
+                }
+        );
 
         JPanel controlPanel = new JPanel();
         controlPanel.add(playButton);
-        controlPanel.add(pauseButton);
-        controlPanel.add(replayButton);
+
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -101,13 +111,13 @@ public class OuvrirPartition extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         add(controlPanel, gbc);
 
-        // Set background color for the panel
         setBackground(BACKGROUND_COLOR);
     }
 
     public void setInstrument(String instrument) {
         instrumentSelector.setText(instrument);
         System.out.println("Instrument selected: " + instrument);
+        controller.setInstrument(instrument);
     }
 
     private static void styleAsButton(JComponent component) {

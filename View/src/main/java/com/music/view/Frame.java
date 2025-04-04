@@ -3,14 +3,17 @@ package com.music.view;
 import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.*;
+import com.music.controller.IController;
 
 public class Frame extends JFrame {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
     private Header header;
     private JLayeredPane layeredPane;
+    private IController controller;
 
-    public Frame() {
+    public Frame(IController controller) {
+        this.controller = controller;
         initializeUI();
     }
 
@@ -36,7 +39,7 @@ public class Frame extends JFrame {
 
         setLayout(new BorderLayout());
 
-        header = new Header(this);
+        header = new Header(this, controller);
         add(header.getHeaderPanel(), BorderLayout.NORTH);
 
         layeredPane = new JLayeredPane();
