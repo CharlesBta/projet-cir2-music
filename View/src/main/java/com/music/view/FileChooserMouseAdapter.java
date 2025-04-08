@@ -39,7 +39,15 @@ public class FileChooserMouseAdapter extends MouseAdapter {
                 saveLastDirectory();
 
                 ReaderJson readerJson = new ReaderJson(controller);
-                readerJson.setFilePath(selectedFile.getAbsolutePath());
+                if (selectedFile.getName().endsWith(".json")) {
+                    readerJson.setFilePath(selectedFile.getAbsolutePath());
+                }
+
+                if (selectedFile.getName().endsWith(".txt")) {
+                    ConverterTxtToJson converter = new ConverterTxtToJson();
+                    converter.setFilePath(selectedFile.getAbsolutePath());
+                    readerJson.setJsonString(converter.convertFileToJsonString());
+                }
 
                 SwingUtilities.invokeLater(() -> {
                     OuvrirPartition partitionPanel = new OuvrirPartition(selectedFile.getName(), controller, readerJson);
