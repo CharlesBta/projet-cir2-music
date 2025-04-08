@@ -45,7 +45,19 @@ public class Header {
         addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Guitare"});
 
         JButton openButton = createStyledButton("Ouvrir");
-        openButton.addMouseListener(new FileChooserMouseAdapter(frame, controller));
+        openButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Utiliser FileChooserMouseAdapter pour gérer l'action d'ouverture
+                new FileChooserMouseAdapter(frame, controller).mouseClicked(e);
+
+                // Masquer le menu et afficher un autre contenu
+                JPanel newContent = new JPanel();
+                newContent.setBackground(Color.LIGHT_GRAY);
+                newContent.add(new JLabel("Ouvrir Partition", SwingConstants.CENTER));
+                frame.updateFrameContent(newContent);
+            }
+        });
         headerPanel.add(openButton);
 
         JButton menuButton = createStyledButton("Menu");

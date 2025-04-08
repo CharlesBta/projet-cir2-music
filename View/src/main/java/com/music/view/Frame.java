@@ -48,7 +48,7 @@ public class Frame extends JFrame {
         add(layeredPane, BorderLayout.CENTER);
 
         Menu menu = new Menu();
-        add(menu, BorderLayout.CENTER);
+        layeredPane.add(menu, new GridBagConstraints());
 
         setVisible(true);
     }
