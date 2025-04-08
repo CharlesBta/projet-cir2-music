@@ -1,9 +1,10 @@
 package com.music.view;
 
-import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
-import java.awt.*;
 import com.music.controller.IController;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Frame extends JFrame {
     private static final int WIDTH = 1280;
@@ -45,6 +46,9 @@ public class Frame extends JFrame {
         layeredPane = new JLayeredPane();
         layeredPane.setLayout(new GridBagLayout());
         add(layeredPane, BorderLayout.CENTER);
+
+        Menu menu = new Menu();
+        add(menu, BorderLayout.CENTER);
 
         setVisible(true);
     }
