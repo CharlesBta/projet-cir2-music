@@ -52,7 +52,7 @@ public class Header {
                 new FileChooserMouseAdapter(frame, controller).mouseClicked(e);
 
                 // Masquer le menu et afficher un autre contenu
-                JPanel newContent = new JPanel();
+                JLayeredPane newContent = new JLayeredPane();
                 newContent.setBackground(Color.LIGHT_GRAY);
                 newContent.add(new JLabel("Ouvrir Partition", SwingConstants.CENTER));
                 frame.updateFrameContent(newContent);
@@ -61,7 +61,10 @@ public class Header {
         headerPanel.add(openButton);
 
         JButton menuButton = createStyledButton("Menu");
-        menuButton.addActionListener(e -> System.out.println("menu"));
+        menuButton.addActionListener(e -> {
+            Menu menu = new Menu();
+            frame.updateFrameContent(menu);
+        });
         headerPanel.add(menuButton);
 
         JButton quitButton = createStyledButton("Quit");

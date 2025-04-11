@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class OuvrirPartition extends JPanel {
+public class OuvrirPartition extends JLayeredPane {
 
     private static final int INSETS = 20;
     private static final int LABEL_FONT_SIZE = 30;

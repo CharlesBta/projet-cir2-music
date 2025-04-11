@@ -53,7 +53,7 @@ public class Frame extends JFrame {
         setVisible(true);
     }
 
-    public void updateFrameContent(JPanel newContent) {
+    public void updateFrameContent(JLayeredPane newContent) {
         layeredPane.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
