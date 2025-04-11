@@ -2,17 +2,23 @@ package com.music.view;
 
 import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import com.music.controller.IController;
+import lombok.Getter;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 public class Header {
 
+    @Getter
     private JPanel headerPanel;
+    private Frame frame;
+    private IController controller;
 
-    public Header() {
+    public Header(Frame frame, IController controller) {
+        this.frame = frame;
+        this.controller = controller;
         initializeUI();
     }
 
@@ -39,11 +45,26 @@ public class Header {
         addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Guitare"});
 
         JButton openButton = createStyledButton("Ouvrir");
-        openButton.addMouseListener(new FileChooserMouseAdapter());
+        openButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Utiliser FileChooserMouseAdapter pour gérer l'action d'ouverture
+                new FileChooserMouseAdapter(frame, controller).mouseClicked(e);
+
+                // Masquer le menu et afficher un autre contenu
+                JLayeredPane newContent = new JLayeredPane();
+                newContent.setBackground(Color.LIGHT_GRAY);
+                newContent.add(new JLabel("Ouvrir Partition", SwingConstants.CENTER));
+                frame.updateFrameContent(newContent);
+            }
+        });
         headerPanel.add(openButton);
 
         JButton menuButton = createStyledButton("Menu");
-        menuButton.addActionListener(e -> System.out.println("menu"));
+        menuButton.addActionListener(e -> {
+            Menu menu = new Menu();
+            frame.updateFrameContent(menu);
+        });
         headerPanel.add(menuButton);
 
         JButton quitButton = createStyledButton("Quit");
@@ -60,7 +81,9 @@ public class Header {
     private void addPopupMenuToButton(JButton button, String[] items) {
         JPopupMenu popupMenu = new JPopupMenu();
         for (String item : items) {
-            popupMenu.add(new JMenuItem(item));
+            JMenuItem menuItem = new JMenuItem(item);
+            menuItem.addActionListener(e -> controller.setInstrument(item));
+            popupMenu.add(menuItem);
         }
 
         button.addMouseListener(new MouseAdapter() {
@@ -81,43 +104,6 @@ public class Header {
         });
     }
 
-    private class FileChooserMouseAdapter extends MouseAdapter {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("JSON & Text Files", "json", "txt"));
-
-            int result = fileChooser.showOpenDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                if (isJsonOrTxtFile(selectedFile)) {
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                } else {
-                    showErrorDialog("Erreur: Veuillez sélectionner un fichier .json ou .txt");
-                }
-            }
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            ((JButton) e.getSource()).setBackground(Color.GRAY);
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            ((JButton) e.getSource()).setBackground(Color.LIGHT_GRAY);
-        }
-    }
-
-    private boolean isJsonOrTxtFile(File file) {
-        String fileName = file.getName().toLowerCase();
-        return fileName.endsWith(".json") || fileName.endsWith(".txt");
-    }
-
-    private void showErrorDialog(String message) {
-        JOptionPane.showMessageDialog(null, message, "Erreur", JOptionPane.ERROR_MESSAGE);
-    }
-
     private static void styleAsButton(JComponent component) {
         component.setOpaque(true);
         component.setBackground(Color.LIGHT_GRAY);
@@ -126,9 +112,5 @@ public class Header {
         if (component instanceof AbstractButton) {
             ((AbstractButton) component).setHorizontalAlignment(SwingConstants.CENTER);
         }
-    }
-
-    public JPanel getHeaderPanel() {
-        return headerPanel;
     }
 }

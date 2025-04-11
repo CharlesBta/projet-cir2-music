@@ -1,12 +1,13 @@
 package com.music;
 
-
+import com.music.controller.Controller;
+import com.music.model.Model;
 import com.music.view.Frame;
-
-import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Frame::new);
+        Model model = new Model();
+        Controller controller = new Controller(model, "Piano");
+        Frame frame = new Frame(controller);
     }
 }

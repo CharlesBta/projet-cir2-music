@@ -1,16 +1,14 @@
 package com.music.view;
 
+import com.music.controller.IController;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class OuvrirPartition extends JFrame {
+public class OuvrirPartition extends JLayeredPane {
 
-    private static final int FRAME_WIDTH = 1280;
-    private static final int FRAME_HEIGHT = 720;
     private static final int INSETS = 20;
     private static final int LABEL_FONT_SIZE = 30;
     private static final int BUTTON_FONT_SIZE = 24;
@@ -20,18 +18,18 @@ public class OuvrirPartition extends JFrame {
     private static final int ICON_HEIGHT = 60;
     private static final int IMAGE_BUTTON_WIDTH = 120;
     private static final int IMAGE_BUTTON_HEIGHT = 90;
-    private static final Color BACKGROUND_COLOR = new Color(240, 240, 240);
+    private static final Color BACKGROUND_COLOR = new Color(255, 255, 255);
     private static final Color BUTTON_COLOR = new Color(200, 200, 200);
     private static final Color HOVER_COLOR = new Color(180, 180, 180);
 
     private final JLabel fileNameLabel;
     private final JButton instrumentSelector;
+    private final IController controller;
+    private ReaderJson reader;
 
-    public OuvrirPartition() {
-        setTitle("Ouvrir Partition");
-        setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+    public OuvrirPartition(String fileName, final IController controller, ReaderJson reader) {
+        this.controller = controller;
+        this.reader = reader;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(INSETS, INSETS, INSETS, INSETS);
@@ -45,10 +43,10 @@ public class OuvrirPartition extends JFrame {
         styleAsButton(instrumentSelector);
 
         JPopupMenu popupMenu = new JPopupMenu();
-        String[] instruments = {"Piano", "Xylophone", "Game Music"};
+        String[] instruments = {"Piano", "Xylophone", "Video Game"};
         for (String instrument : instruments) {
             JMenuItem item = new JMenuItem(instrument);
-            item.addActionListener(new InstrumentSelectionListener(instrument));
+            item.addActionListener(e -> setInstrument(instrument));
             popupMenu.add(item);
         }
 
@@ -79,7 +77,7 @@ public class OuvrirPartition extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         add(instrumentSelector, gbc);
 
-        fileNameLabel = new JLabel("Aucun fichier ouvert", SwingConstants.CENTER);
+        fileNameLabel = new JLabel(fileName, SwingConstants.CENTER);
         fileNameLabel.setFont(new Font("Arial", Font.PLAIN, BUTTON_FONT_SIZE));
 
         gbc.gridx = 0;
@@ -95,13 +93,17 @@ public class OuvrirPartition extends JFrame {
         add(fileNameLabel, gbc);
 
         JButton playButton = createStyledButtonWithIcon("view/src/images/play.png", ICON_WIDTH, ICON_HEIGHT, "Play");
-        JButton pauseButton = createStyledButtonWithIcon("view/src/images/pause.png", ICON_WIDTH, ICON_HEIGHT, "Pause");
-        JButton replayButton = createStyledButtonWithIcon("view/src/images/replay.png", ICON_WIDTH, ICON_HEIGHT, "Replay");
+
+        playButton.addActionListener(
+                e -> {
+                    System.out.println("Play button clicked");
+                    reader.play();
+                }
+        );
 
         JPanel controlPanel = new JPanel();
         controlPanel.add(playButton);
-        controlPanel.add(pauseButton);
-        controlPanel.add(replayButton);
+
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -109,8 +111,13 @@ public class OuvrirPartition extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         add(controlPanel, gbc);
 
-        // Set background color for the frame
-        getContentPane().setBackground(BACKGROUND_COLOR);
+        setBackground(BACKGROUND_COLOR);
+    }
+
+    public void setInstrument(String instrument) {
+        instrumentSelector.setText(instrument);
+        System.out.println("Instrument selected: " + instrument);
+        controller.setInstrument(instrument);
     }
 
     private static void styleAsButton(JComponent component) {
@@ -153,18 +160,5 @@ public class OuvrirPartition extends JFrame {
         });
 
         return button;
-    }
-
-    private class InstrumentSelectionListener implements ActionListener {
-        private final String instrument;
-
-        public InstrumentSelectionListener(String instrument) {
-            this.instrument = instrument;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            instrumentSelector.setText(instrument);
-        }
     }
 }

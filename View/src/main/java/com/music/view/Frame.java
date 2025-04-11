@@ -1,14 +1,20 @@
 package com.music.view;
 
-import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.music.controller.IController;
+
+import javax.swing.*;
 import java.awt.*;
 
-public class Frame {
+public class Frame extends JFrame {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
+    private Header header;
+    private JLayeredPane layeredPane;
+    private IController controller;
 
-    public Frame() {
+    public Frame(IController controller) {
+        this.controller = controller;
         initializeUI();
     }
 
@@ -26,17 +32,39 @@ public class Frame {
     }
 
     private void createAndShowFrame() {
-        JFrame frame = new JFrame("Piano Virtuel");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(WIDTH, HEIGHT);
-        frame.setLocationRelativeTo(null);
+        setTitle("Piano Virtuel");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(WIDTH, HEIGHT);
+        setLocationRelativeTo(null);
+        getContentPane().setBackground(Color.WHITE);
 
-        frame.getContentPane().setBackground(Color.WHITE);
+        setLayout(new BorderLayout());
 
-        Header header = new Header();
-        frame.add(header.getHeaderPanel(), BorderLayout.WEST);
+        header = new Header(this, controller);
+        add(header.getHeaderPanel(), BorderLayout.NORTH);
 
-        frame.setVisible(true);
+        layeredPane = new JLayeredPane();
+        layeredPane.setLayout(new GridBagLayout());
+        add(layeredPane, BorderLayout.CENTER);
+
+        Menu menu = new Menu();
+        layeredPane.add(menu, new GridBagConstraints());
+
+        setVisible(true);
     }
 
+    public void updateFrameContent(JLayeredPane newContent) {
+        layeredPane.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        layeredPane.add(newContent, gbc);
+        layeredPane.revalidate();
+        layeredPane.repaint();
+    }
 }

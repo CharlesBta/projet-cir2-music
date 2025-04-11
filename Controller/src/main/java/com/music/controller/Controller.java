@@ -12,10 +12,11 @@ public class Controller implements IController {
     @Setter
     private int velocity;
 
-    public Controller(final IModel model) {
+    public Controller(final IModel model, final String defaultInstrument) {
         this.model = model;
         this.octave = 5;
         this.velocity = 64;
+        this.model.setInstrument(InstrumentFactory.getInstrument(defaultInstrument, this.velocity));
     }
 
     @Override
