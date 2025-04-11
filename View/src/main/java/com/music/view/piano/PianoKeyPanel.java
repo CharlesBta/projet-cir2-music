@@ -99,7 +99,7 @@ public class PianoKeyPanel extends JLayeredPane {
 
     public void handleKeyPress(KeyEvent e) {
         char keyChar = e.getKeyChar();
-        String note = getNoteFromKeyChar(keyChar);
+        String note = getNoteFromKeyChar(Character.toLowerCase(keyChar));
         if (note != null) {
             JButton keyButton = noteToButton.get(note);
             if (keyButton != null) {

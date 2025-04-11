@@ -4,13 +4,15 @@ import com.music.controller.IController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
-public class XylophonePanel extends JPanel implements KeyListener {
+public class XylophonePanel extends JPanel implements KeyListener, FocusListener {
 
     private static final Color[] BAR_COLORS = {
             new Color(255, 0, 0),   // C
@@ -30,11 +32,30 @@ public class XylophonePanel extends JPanel implements KeyListener {
 
     public XylophonePanel(IController controller) {
         this.controller = controller;
+    }
+
+    public void init(){
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(1280, 720)); // Taille similaire au piano
         setFocusable(true);
         addKeyListener(this);
+        addFocusListener(this);
         initializeBars();
+
+        // Utiliser un KeyEventDispatcher pour capturer les événements de clavier au niveau global
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if (isFocusOwner()) {
+                    if (e.getID() == KeyEvent.KEY_PRESSED) {
+                        keyPressed(e);
+                    } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+                        keyReleased(e);
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private void initializeBars() {
@@ -69,19 +90,32 @@ public class XylophonePanel extends JPanel implements KeyListener {
             @Override
             public void mousePressed(MouseEvent e) {
                 handleBarPress(bar, note);
+                requestFocusInWindow();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                handleBarRelease(bar, note);
+                requestFocusInWindow();
             }
         });
 
         return bar;
     }
 
+    private void handleBarRelease(JButton bar, String note) {
+        bar.setBackground(getOriginalColor(bar));
+        if (controller != null && note != null) {
+            controller.stopNote(0, note);
+        }
+    }
+
     private void handleBarPress(JButton bar, String note) {
         bar.setBackground(Color.GRAY);
         if (controller != null && note != null) {
-            controller.playNote(0, note); // Ajuster si nécessaire
+            controller.playNote(0, note);
         }
 
-        // Revenir à la couleur d'origine après un court délai
         Timer timer = new Timer(200, e -> bar.setBackground(getOriginalColor(bar)));
         timer.setRepeats(false);
         timer.start();
@@ -106,24 +140,43 @@ public class XylophonePanel extends JPanel implements KeyListener {
         char keyChar = e.getKeyChar();
         int index = getNoteIndexFromKeyChar(keyChar);
         if (index != -1) {
-            JButton bar = noteToButton.get(NOTES[index]);
+            String note = NOTES[index];
+            JButton bar = noteToButton.get(note);
             if (bar != null) {
-                handleBarPress(bar, NOTES[index]);
+                handleBarPress(bar, note);
             }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // Pas utilisé
+        char keyChar = e.getKeyChar();
+        int index = getNoteIndexFromKeyChar(keyChar);
+        if (index != -1) {
+            String note = NOTES[index];
+            JButton bar = noteToButton.get(note);
+            if (bar != null) {
+                handleBarRelease(bar, note);
+            }
+        }
     }
 
     private int getNoteIndexFromKeyChar(final char keyChar) {
         for (int i = 0; i < KEY_MAPPINGS.length; i++) {
-            if (KEY_MAPPINGS[i] == keyChar) {
+            if (KEY_MAPPINGS[i] == Character.toLowerCase(keyChar)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        requestFocusInWindow();
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        // Pas utilisé
     }
 }

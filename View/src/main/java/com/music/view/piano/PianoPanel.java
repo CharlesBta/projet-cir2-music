@@ -20,6 +20,9 @@ public class PianoPanel extends JPanel {
     public PianoPanel(IController controller) {
         this.controller = controller;
         this.numberOfPanels = 1; // Initialiser avec 1 octave
+    }
+
+    public void init(){
         setLayout(new BorderLayout());
 
         mainPanel = new JPanel();
