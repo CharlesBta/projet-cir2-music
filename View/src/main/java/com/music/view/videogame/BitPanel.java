@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.HashMap;
 
-public class BitPanel extends JPanel implements KeyListener, FocusListener {
+public class BitPanel extends JLayeredPane implements KeyListener, FocusListener {
 
     private static final String[] BIT_NOTES = {"Bit1", "Bit2", "Bit3", "Bit4", "Bit5", "Bit6", "Bit7", "Bit8"};
     private static final char[] KEY_MAPPINGS = {'q', 's', 'd', 'f', 'g', 'h', 'j', 'k'};

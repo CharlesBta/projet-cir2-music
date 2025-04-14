@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.KeyboardFocusManager;
 
-public class PianoPanel extends JPanel {
+public class PianoPanel extends JLayeredPane {
     private IController controller;
     private JPanel mainPanel;
     private JPanel pianoContainer;
@@ -100,6 +100,9 @@ public class PianoPanel extends JPanel {
     }
 
     private void addPianoKeyPanel() {
+        if (numberOfPanels >= 3 ) {
+            return;
+        }
         PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, numberOfPanels);
         pianoContainer.add(pianoKeyPanel);
         pianoSelector.addItem("Piano " + (numberOfPanels + 1));

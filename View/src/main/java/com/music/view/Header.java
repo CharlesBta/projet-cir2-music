@@ -1,8 +1,12 @@
 package com.music.view;
 
 import javax.swing.*;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import com.music.controller.IController;
+import com.music.view.piano.PianoPanel;
+import com.music.view.videogame.BitPanel;
+import com.music.view.xylophone.XylophonePanel;
 import lombok.Getter;
 
 import java.awt.*;
@@ -42,7 +46,7 @@ public class Header {
 
         JButton headerButton = createStyledButton("Instruments");
         headerPanel.add(headerButton);
-        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Guitare"});
+        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Video Game"});
 
         JButton openButton = createStyledButton("Ouvrir");
         openButton.addMouseListener(new MouseAdapter() {
@@ -82,7 +86,26 @@ public class Header {
         JPopupMenu popupMenu = new JPopupMenu();
         for (String item : items) {
             JMenuItem menuItem = new JMenuItem(item);
-            menuItem.addActionListener(e -> controller.setInstrument(item));
+            menuItem.addActionListener(e -> {
+                controller.setInstrument(item);
+                switch (item) {
+                    case "Piano":
+                        PianoPanel pianoPanel = new PianoPanel(controller);
+                        pianoPanel.init();
+                        frame.updateFrameContent(pianoPanel);
+                        break;
+                    case "Xylophone":
+                        XylophonePanel xylophonePanel = new XylophonePanel(controller);
+                        xylophonePanel.init();
+                        frame.updateFrameContent(xylophonePanel);
+                        break;
+                    case "Video Game":
+                        BitPanel bitPanel = new BitPanel(controller);
+                        bitPanel.init();
+                        frame.updateFrameContent(bitPanel);
+                        break;
+                }
+            });
             popupMenu.add(menuItem);
         }
 

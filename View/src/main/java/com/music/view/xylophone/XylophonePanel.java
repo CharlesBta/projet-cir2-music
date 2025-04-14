@@ -12,7 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
-public class XylophonePanel extends JPanel implements KeyListener, FocusListener {
+public class XylophonePanel extends JLayeredPane implements KeyListener, FocusListener {
 
     private static final Color[] BAR_COLORS = {
             new Color(255, 0, 0),   // C
@@ -59,9 +59,9 @@ public class XylophonePanel extends JPanel implements KeyListener, FocusListener
     }
 
     private void initializeBars() {
-        int baseHeight = 300;
-        int heightDecrease = 30;
-        int fixedWidth = 150; // Largeur fixe pour toutes les lames
+        int baseHeight = 1000;
+        int heightDecrease = 50;
+        int fixedWidth = 400; // Largeur fixe pour toutes les lames
 
         JPanel barPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
