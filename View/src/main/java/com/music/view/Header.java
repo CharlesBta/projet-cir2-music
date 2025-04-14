@@ -57,7 +57,7 @@ public class Header {
 
                 // Masquer le menu et afficher un autre contenu
                 JLayeredPane newContent = new JLayeredPane();
-                newContent.setBackground(Color.LIGHT_GRAY);
+                newContent.setBackground(Color.WHITE);
                 newContent.add(new JLabel("Ouvrir Partition", SwingConstants.CENTER));
                 frame.updateFrameContent(newContent);
             }
