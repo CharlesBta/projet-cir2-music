@@ -92,7 +92,7 @@ public class OuvrirPartition extends JLayeredPane {
         gbc.anchor = GridBagConstraints.CENTER;
         add(fileNameLabel, gbc);
 
-        JButton playButton = createStyledButtonWithIcon("view/src/images/play.png", ICON_WIDTH, ICON_HEIGHT, "Play");
+        JButton playButton = createStyledButtonWithIcon("view/src/main/resources/play.png", ICON_WIDTH, ICON_HEIGHT, "Play");
 
         playButton.addActionListener(
                 e -> {
