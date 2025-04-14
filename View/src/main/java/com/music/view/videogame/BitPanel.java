@@ -25,7 +25,13 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
         this.controller = controller;
     }
 
-    public void init(){
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        requestFocusInWindow(); // Demande le focus lorsque le composant est ajouté à la hiérarchie
+    }
+
+    public void init() {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1280, 720));
         setFocusable(true);
@@ -37,7 +43,7 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
-                if (isFocusOwner()) {
+                synchronized (BitPanel.this) { // ou XylophonePanel.this
                     if (e.getID() == KeyEvent.KEY_PRESSED) {
                         keyPressed(e);
                     } else if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -48,6 +54,7 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
             }
         });
     }
+
 
     private void initializeBits() {
         GridBagConstraints gbc = new GridBagConstraints();

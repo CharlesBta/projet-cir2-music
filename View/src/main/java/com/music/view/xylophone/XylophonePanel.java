@@ -34,9 +34,15 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
         this.controller = controller;
     }
 
-    public void init(){
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        requestFocusInWindow(); // Demande le focus lorsque le composant est ajouté à la hiérarchie
+    }
+
+    public void init() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setPreferredSize(new Dimension(1280, 720)); // Taille similaire au piano
+        setPreferredSize(new Dimension(1280, 700)); // Taille similaire au piano
         setFocusable(true);
         addKeyListener(this);
         addFocusListener(this);
@@ -46,7 +52,7 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
-                if (isFocusOwner()) {
+                synchronized (XylophonePanel.this) {
                     if (e.getID() == KeyEvent.KEY_PRESSED) {
                         keyPressed(e);
                     } else if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -56,15 +62,16 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
                 return false;
             }
         });
+        setBackground(Color.WHITE);
     }
 
     private void initializeBars() {
-        int baseHeight = 1000;
-        int heightDecrease = 50;
-        int fixedWidth = 400; // Largeur fixe pour toutes les lames
+        int baseHeight = 500;
+        int heightDecrease = 40;
+        int fixedWidth = 150; // Largeur fixe pour toutes les lames
 
-        JPanel barPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
+        JPanel barPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
+        barPanel.setBackground(Color.WHITE);
         for (int i = 0; i < NOTES.length; i++) {
             int height = baseHeight - (i * heightDecrease);
             JButton bar = createBar(NOTES[i], BAR_COLORS[i], fixedWidth, height);

@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Frame extends JFrame {
-    private static final int WIDTH = 1280;
-    private static final int HEIGHT = 720;
+    private static final int WIDTH = 1600;
+    private static final int HEIGHT = 900;
     private Header header;
     private JLayeredPane layeredPane;
     private IController controller;
@@ -62,6 +62,7 @@ public class Frame extends JFrame {
         gbc.weighty = 1.0;
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
+        layeredPane.setBackground(Color.WHITE);
 
         layeredPane.add(newContent, gbc);
         layeredPane.revalidate();
