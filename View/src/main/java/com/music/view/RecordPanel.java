@@ -14,7 +14,7 @@ public class RecordPanel extends JLayeredPane {
     private static final Color HOVER_COLOR = new Color(255, 255, 255);
 
     public RecordPanel() {
-        setLayout(new BorderLayout()); // Use BorderLayout for RecordPanel
+        setLayout(new BorderLayout());
 
         JButton recordButton = createStyledButtonWithIcon("view/src/main/resources/record.png", ICON_WIDTH, ICON_HEIGHT, "Record");
         JButton stopButton = createStyledButtonWithIcon("view/src/main/resources/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
@@ -39,9 +39,9 @@ public class RecordPanel extends JLayeredPane {
 
         // Add padding to the right to shift buttons to the left
         controlPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-        controlPanel.setBackground(Color.WHITE); // Set background color to white
+        controlPanel.setBackground(Color.WHITE);
 
-        add(controlPanel, BorderLayout.WEST); // Add controlPanel to the left of RecordPanel
+        add(controlPanel, BorderLayout.WEST);
     }
 
     private JButton createStyledButtonWithIcon(String path, int width, int height, String tooltip) {
