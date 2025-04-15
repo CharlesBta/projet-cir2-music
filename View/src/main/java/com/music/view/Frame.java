@@ -12,6 +12,7 @@ public class Frame extends JFrame {
     private Header header;
     private JLayeredPane layeredPane;
     private IController controller;
+    private RecordPanel recordPanel;
 
     public Frame(IController controller) {
         this.controller = controller;
@@ -67,5 +68,8 @@ public class Frame extends JFrame {
         layeredPane.add(newContent, gbc);
         layeredPane.revalidate();
         layeredPane.repaint();
+
+        recordPanel = new RecordPanel();
+        add(recordPanel, BorderLayout.EAST);
     }
 }

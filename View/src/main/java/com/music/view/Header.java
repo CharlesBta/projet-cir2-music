@@ -1,7 +1,5 @@
 package com.music.view;
 
-import javax.swing.*;
-
 import com.formdev.flatlaf.FlatLightLaf;
 import com.music.controller.IController;
 import com.music.view.piano.PianoPanel;
@@ -9,6 +7,7 @@ import com.music.view.videogame.BitPanel;
 import com.music.view.xylophone.XylophonePanel;
 import lombok.Getter;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,6 +16,7 @@ public class Header {
 
     @Getter
     private JPanel headerPanel;
+    private JPanel controlPanel;
     private Frame frame;
     private IController controller;
 
@@ -29,6 +29,7 @@ public class Header {
     private void initializeUI() {
         setLookAndFeel();
         createHeaderPanel();
+
     }
 
     private void setLookAndFeel() {
@@ -74,6 +75,8 @@ public class Header {
         JButton quitButton = createStyledButton("Quit");
         quitButton.addActionListener(e -> System.exit(0));
         headerPanel.add(quitButton);
+
+
     }
 
     private JButton createStyledButton(String text) {
@@ -136,4 +139,5 @@ public class Header {
             ((AbstractButton) component).setHorizontalAlignment(SwingConstants.CENTER);
         }
     }
+
 }
