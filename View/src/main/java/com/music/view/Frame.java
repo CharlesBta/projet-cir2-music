@@ -9,9 +9,8 @@ import java.awt.*;
 public class Frame extends JFrame {
     private static final int WIDTH = 1600;
     private static final int HEIGHT = 900;
-    private Header header;
+    private final IController controller;
     private JLayeredPane layeredPane;
-    private IController controller;
 
     public Frame(IController controller) {
         this.controller = controller;
@@ -40,7 +39,7 @@ public class Frame extends JFrame {
 
         setLayout(new BorderLayout());
 
-        header = new Header(this, controller);
+        Header header = new Header(this, controller);
         add(header.getHeaderPanel(), BorderLayout.NORTH);
 
         layeredPane = new JLayeredPane();
@@ -67,5 +66,8 @@ public class Frame extends JFrame {
         layeredPane.add(newContent, gbc);
         layeredPane.revalidate();
         layeredPane.repaint();
+
+        RecordPanel recordPanel = new RecordPanel();
+        add(recordPanel, BorderLayout.EAST);
     }
 }
