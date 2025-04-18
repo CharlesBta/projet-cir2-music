@@ -3,11 +3,13 @@ package com.music.controller;
 import com.music.NoteOffsetCalculator;
 import com.music.model.instrument.InstrumentFactory;
 import com.music.model.IModel;
+import lombok.Getter;
 import lombok.Setter;
 
 public class Controller implements IController {
     private final IModel model;
     @Setter
+    @Getter
     private int octave;
     @Setter
     private int velocity;
