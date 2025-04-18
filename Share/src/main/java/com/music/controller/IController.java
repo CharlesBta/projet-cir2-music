@@ -8,5 +8,6 @@ public interface IController {
     void setInstrument(String instrument);
 
     void setOctave(int octave);
+    int getOctave();
     void setVelocity(int velocity);
 }
