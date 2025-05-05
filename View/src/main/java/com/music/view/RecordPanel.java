@@ -1,5 +1,7 @@
 package com.music.view;
 
+import com.music.controller.IController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -12,22 +14,25 @@ public class RecordPanel extends JLayeredPane {
     private static final int IMAGE_BUTTON_HEIGHT = 50;
     private static final Color BUTTON_COLOR = new Color(255, 255, 255);
     private static final Color HOVER_COLOR = new Color(255, 255, 255);
+    private Record record;
 
-    public RecordPanel() {
+    public RecordPanel(IController controller) {
         setLayout(new BorderLayout());
-
+        record = new Record(controller, this);
         JButton recordButton = createStyledButtonWithIcon("view/src/main/resources/record.png", ICON_WIDTH, ICON_HEIGHT, "Record");
         JButton stopButton = createStyledButtonWithIcon("view/src/main/resources/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
 
         recordButton.addActionListener(
                 e -> {
-                    System.out.println("record");
+                    System.out.println("Record button clicked");
+                    record.record();
                 }
         );
 
         stopButton.addActionListener(
                 e -> {
-                    System.out.println("stop");
+                    System.out.println("Stop button clicked");
+                    record.stop();
                 }
         );
 

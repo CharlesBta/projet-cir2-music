@@ -67,7 +67,7 @@ public class Frame extends JFrame {
         layeredPane.revalidate();
         layeredPane.repaint();
 
-        RecordPanel recordPanel = new RecordPanel();
+        RecordPanel recordPanel = new RecordPanel(controller);
         add(recordPanel, BorderLayout.EAST);
     }
 }
