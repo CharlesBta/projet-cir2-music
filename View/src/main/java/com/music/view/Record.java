@@ -10,6 +10,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.Timestamp;
 import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Record {
     private List<IAction> actions = new ArrayList<>();
@@ -94,50 +97,48 @@ public class Record {
     }
 
     private void saveJsonToFile(String jsonContent) {
-        String directoryPath = "sujet";
-        java.io.File directory = new java.io.File(directoryPath);
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Enregistrer sous");
 
-        // Crée le dossier s'il n'existe pas
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+        int userSelection = fileChooser.showSaveDialog(panel);
 
-        // Génère un nom de fichier unique
-        int fileIndex = 1;
-        java.io.File file;
-        do {
-            file = new java.io.File(directory, "recording_" + fileIndex + ".json");
-            fileIndex++;
-        } while (file.exists());
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
 
-        // Transforme les actions en JSON au format attendu
-        Gson gson = new Gson();
-        List<Map<String, Object>> formattedActions = new ArrayList<>();
-        for (IAction action : actions) {
-            Map<String, Object> actionMap = new HashMap<>();
-            if (action instanceof Action) {
-                Action act = (Action) action;
-                actionMap.put("note", act.note().getNote());
-                actionMap.put("octave", act.note().getOctave());
-                actionMap.put("duration", act.duration());
-            } else if (action instanceof Pause) {
-                Pause pause = (Pause) action;
-                actionMap.put("note", "Pause");
-                actionMap.put("duration", pause.duration());
+            // Ajoute l'extension .json si elle n'est pas déjà présente
+            if (!fileToSave.getName().toLowerCase().endsWith(".json")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".json");
             }
-            formattedActions.add(actionMap);
-        }
-        String formattedJsonContent = gson.toJson(formattedActions);
 
-        // Écrit le contenu JSON dans le fichier
-        try (java.io.FileWriter writer = new java.io.FileWriter(file)) {
-            writer.write(formattedJsonContent);
-            System.out.println("Fichier JSON enregistré : " + file.getAbsolutePath());
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+            // Transforme les actions en JSON au format attendu
+            Gson gson = new Gson();
+            List<Map<String, Object>> formattedActions = new ArrayList<>();
+            for (IAction action : actions) {
+                Map<String, Object> actionMap = new HashMap<>();
+                if (action instanceof Action) {
+                    Action act = (Action) action;
+                    actionMap.put("note", act.note().getNote());
+                    actionMap.put("octave", act.note().getOctave());
+                    actionMap.put("duration", act.duration());
+                } else if (action instanceof Pause) {
+                    Pause pause = (Pause) action;
+                    actionMap.put("note", "Pause");
+                    actionMap.put("duration", pause.duration());
+                }
+                formattedActions.add(actionMap);
+            }
+            String formattedJsonContent = gson.toJson(formattedActions);
+
+            // Écrit le contenu JSON dans le fichier
+            try (FileWriter writer = new FileWriter(fileToSave)) {
+                writer.write(formattedJsonContent);
+                System.out.println("Fichier JSON enregistré : " + fileToSave.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(panel, "Erreur lors de l'enregistrement du fichier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
-
 
     private interface IAction {
     }
