@@ -144,6 +144,9 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (controller.isSaving()) {
+            return; // Ignore les événements de touche si l'enregistrement est en cours
+        }
         char keyChar = e.getKeyChar();
         int index = getNoteIndexFromKeyChar(keyChar);
         if (index != -1) {

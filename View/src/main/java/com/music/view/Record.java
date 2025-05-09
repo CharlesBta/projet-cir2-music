@@ -28,11 +28,9 @@ public class Record {
     }
 
     public void record() {
-        System.out.println("Recording started");
         isRecording = true;
         actions.clear();
         if (panel != null) {
-            System.out.println("Key listener removed");
             panel.setFocusable(true);
             panel.addKeyListener(new KeyListener() {
                 @Override
@@ -42,10 +40,8 @@ public class Record {
 
                 @Override
                 public void keyPressed(KeyEvent e) {
-                    System.out.println("Key pressed: " + e.getKeyChar());
                     char keyChar = e.getKeyChar();
                     if (Character.isDefined(keyChar) && !pressedKeys.contains(keyChar)) {
-                        System.out.println("Key pressed: " + keyChar);
                         pressedKeys.add(keyChar);
                         addPause();
                     }
@@ -55,7 +51,6 @@ public class Record {
                 public void keyReleased(KeyEvent e) {
                     char keyChar = e.getKeyChar();
                     if (Character.isDefined(keyChar)) {
-                        System.out.println("Key released: " + keyChar);
                         pressedKeys.remove(keyChar);
                         Note newNote = new Note(controller.getOctave(), keyChar);
                         addAction(newNote);
@@ -67,7 +62,6 @@ public class Record {
     }
 
     public void stop() {
-        System.out.println("Recording stopped");
         isRecording = false;
         if (panel.getKeyListeners().length > 0) {
             panel.removeKeyListener(panel.getKeyListeners()[0]);
@@ -75,9 +69,8 @@ public class Record {
         panel.setFocusable(false);
         Gson gson = new Gson();
         String actionsJson = gson.toJson(actions);
-        System.out.println("Actions en JSON : " + actionsJson);
         if (actions.get(0) instanceof Pause) {
-            actions.remove(0); // Remove the first pause if it exists
+            actions.remove(0);
         }
         saveJsonToFile(actionsJson);
     }
@@ -97,6 +90,7 @@ public class Record {
     }
 
     private void saveJsonToFile(String jsonContent) {
+        controller.setIsSaving(true);
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Enregistrer sous");
 
@@ -137,7 +131,10 @@ public class Record {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(panel, "Erreur lors de l'enregistrement du fichier.", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
+
         }
+
+        controller.setIsSaving(false);
     }
 
     private interface IAction {
