@@ -14,18 +14,31 @@ public class RecordPanel extends JLayeredPane {
     private static final int IMAGE_BUTTON_HEIGHT = 50;
     private static final Color BUTTON_COLOR = new Color(255, 255, 255);
     private static final Color HOVER_COLOR = new Color(255, 255, 255);
+    private static final Color RECORDING_INDICATOR_COLOR = new Color(255, 0, 0);
     private Record record;
+    private IController controller;
+    private JLabel recordingIndicator;
 
     public RecordPanel(IController controller) {
         setLayout(new BorderLayout());
+        this.controller = controller;
         record = new Record(controller, this);
         JButton recordButton = createStyledButtonWithIcon("view/src/main/resources/record.png", ICON_WIDTH, ICON_HEIGHT, "Record");
         JButton stopButton = createStyledButtonWithIcon("view/src/main/resources/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
+
+        // Create recording indicator
+        recordingIndicator = new JLabel("● RECORDING");
+        recordingIndicator.setForeground(RECORDING_INDICATOR_COLOR);
+        recordingIndicator.setFont(new Font(recordingIndicator.getFont().getName(), Font.BOLD, 14));
+        recordingIndicator.setHorizontalAlignment(SwingConstants.CENTER);
+        recordingIndicator.setAlignmentX(Component.CENTER_ALIGNMENT); // Center horizontally in BoxLayout
+        recordingIndicator.setVisible(controller.isRecording());
 
         recordButton.addActionListener(
                 e -> {
                     System.out.println("Record button clicked");
                     record.record();
+                    updateRecordingIndicator();
                 }
         );
 
@@ -33,6 +46,7 @@ public class RecordPanel extends JLayeredPane {
                 e -> {
                     System.out.println("Stop button clicked");
                     record.stop();
+                    updateRecordingIndicator();
                 }
         );
 
@@ -41,6 +55,8 @@ public class RecordPanel extends JLayeredPane {
         controlPanel.add(recordButton);
         controlPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add some space between buttons
         controlPanel.add(stopButton);
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add space before indicator
+        controlPanel.add(recordingIndicator);
 
         // Add padding to the right to shift buttons to the left
         controlPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
@@ -77,5 +93,12 @@ public class RecordPanel extends JLayeredPane {
         });
 
         return button;
+    }
+
+    /**
+     * Updates the recording indicator visibility based on the controller's recording state
+     */
+    private void updateRecordingIndicator() {
+        recordingIndicator.setVisible(controller.isRecording());
     }
 }

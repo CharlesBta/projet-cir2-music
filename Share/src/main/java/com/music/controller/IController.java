@@ -12,4 +12,6 @@ public interface IController {
     void setVelocity(int velocity);
     boolean isSaving();
     void setIsSaving(boolean isSaving);
+    void setIsRecording(boolean isRecording);
+    boolean isRecording();
 }

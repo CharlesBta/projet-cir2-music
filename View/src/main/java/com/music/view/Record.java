@@ -29,6 +29,7 @@ public class Record {
 
     public void record() {
         isRecording = true;
+        controller.setIsRecording(isRecording);
         actions.clear();
         if (panel != null) {
             panel.setFocusable(true);
@@ -63,14 +64,17 @@ public class Record {
 
     public void stop() {
         isRecording = false;
+        controller.setIsRecording(isRecording);
         if (panel.getKeyListeners().length > 0) {
             panel.removeKeyListener(panel.getKeyListeners()[0]);
         }
         panel.setFocusable(false);
         Gson gson = new Gson();
         String actionsJson = gson.toJson(actions);
-        if (actions.get(0) instanceof Pause) {
-            actions.remove(0);
+        if (!actions.isEmpty()){
+            if (actions.getFirst() instanceof Pause) {
+                actions.removeFirst();
+            }
         }
         saveJsonToFile(actionsJson);
     }
