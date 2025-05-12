@@ -13,12 +13,15 @@ public class Controller implements IController {
     private int octave;
     @Setter
     private int velocity;
+    private boolean isRecording = false;
+    private boolean isSaving = false;
 
     public Controller(final IModel model, final String defaultInstrument) {
         this.model = model;
         this.octave = 5;
         this.velocity = 64;
         this.model.setInstrument(InstrumentFactory.getInstrument(defaultInstrument, this.velocity));
+        isSaving = false;
     }
 
     @Override
@@ -48,4 +51,23 @@ public class Controller implements IController {
         this.model.open();
     }
 
+    @Override
+    public boolean isSaving() {
+        return this.isSaving;
+    }
+
+    @Override
+    public void setIsSaving(final boolean isSaving) {
+        this.isSaving = isSaving;
+    }
+
+    @Override
+    public boolean isRecording(){
+        return this.isRecording;
+    }
+
+    @Override
+    public void setIsRecording(final boolean isRecording) {
+        this.isRecording = isRecording;
+    }
 }

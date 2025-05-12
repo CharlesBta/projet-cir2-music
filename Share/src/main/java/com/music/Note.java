@@ -44,7 +44,7 @@ public class Note {
             case 'j':
                 return "B";
             default:
-                return null;
+                return "Pause";
         }
     }
 }

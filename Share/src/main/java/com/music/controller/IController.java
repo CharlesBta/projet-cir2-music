@@ -10,4 +10,8 @@ public interface IController {
     void setOctave(int octave);
     int getOctave();
     void setVelocity(int velocity);
+    boolean isSaving();
+    void setIsSaving(boolean isSaving);
+    void setIsRecording(boolean isRecording);
+    boolean isRecording();
 }

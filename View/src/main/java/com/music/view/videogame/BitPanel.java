@@ -132,6 +132,9 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (controller.isSaving()) {
+            return; // Ignore key events if saving
+        }
         char keyChar = e.getKeyChar();
         int index = getNoteIndexFromKeyChar(keyChar);
         if (index != -1) {

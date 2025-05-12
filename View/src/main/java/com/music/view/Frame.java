@@ -67,7 +67,25 @@ public class Frame extends JFrame {
         layeredPane.revalidate();
         layeredPane.repaint();
 
-        RecordPanel recordPanel = new RecordPanel();
-        add(recordPanel, BorderLayout.EAST);
+        // Remove any existing RecordPanel
+        Component[] components = getContentPane().getComponents();
+        for (Component component : components) {
+            if (component instanceof RecordPanel) {
+                remove(component);
+            }
+        }
+
+        // Only add RecordPanel if the content is an instrument panel
+        boolean isInstrumentPanel = newContent instanceof com.music.view.piano.PianoPanel || 
+                                   newContent instanceof com.music.view.xylophone.XylophonePanel || 
+                                   newContent instanceof com.music.view.videogame.BitPanel;
+
+        if (isInstrumentPanel) {
+            RecordPanel recordPanel = new RecordPanel(controller);
+            add(recordPanel, BorderLayout.EAST);
+        }
+
+        revalidate();
+        repaint();
     }
 }
