@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class XylophonePanel extends JLayeredPane implements KeyListener, FocusListener {
 
@@ -29,6 +30,8 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
 
     private HashMap<String, JButton> noteToButton = new HashMap<>();
     private IController controller;
+    private JLabel noteLabel;
+    private HashSet<Character> pressedKeys = new HashSet<>();
 
     public XylophonePanel(IController controller) {
         this.controller = controller;
@@ -80,6 +83,15 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
 
         add(Box.createVerticalGlue()); // Espace flexible au-dessus
         add(barPanel);
+
+        // Add note display label
+        noteLabel = new JLabel(" ", SwingConstants.CENTER);
+        noteLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        noteLabel.setPreferredSize(new Dimension(100, 30)); // Fixed size to prevent flickering
+        noteLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add padding
+        noteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(noteLabel);
+
         add(Box.createVerticalGlue()); // Espace flexible en dessous
     }
 
@@ -114,6 +126,10 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
         bar.setBackground(getOriginalColor(bar));
         if (controller != null && note != null) {
             controller.stopNote(0, note);
+            // Use a space instead of empty string to maintain label visibility
+            if (pressedKeys.isEmpty()){
+                noteLabel.setText(" ");
+            }
         }
     }
 
@@ -121,6 +137,8 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
         bar.setBackground(Color.GRAY);
         if (controller != null && note != null) {
             controller.playNote(0, note);
+            // Update the label to show the played note
+            noteLabel.setText(note);
         }
 
         Timer timer = new Timer(200, e -> bar.setBackground(getOriginalColor(bar)));
@@ -148,12 +166,19 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
             return; // Ignore les événements de touche si l'enregistrement est en cours
         }
         char keyChar = e.getKeyChar();
-        int index = getNoteIndexFromKeyChar(keyChar);
-        if (index != -1) {
-            String note = NOTES[index];
-            JButton bar = noteToButton.get(note);
-            if (bar != null) {
-                handleBarPress(bar, note);
+
+        // Only process the key if it's not already pressed
+        if (!pressedKeys.contains(keyChar)) {
+            int index = getNoteIndexFromKeyChar(keyChar);
+            if (index != -1) {
+                String note = NOTES[index];
+                JButton bar = noteToButton.get(note);
+                if (bar != null) {
+                    pressedKeys.add(keyChar); // Add to pressed keys set
+                    handleBarPress(bar, note);
+                    // Always update the note label with the most recently pressed key
+                    noteLabel.setText(note);
+                }
             }
         }
     }
@@ -161,6 +186,8 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
     @Override
     public void keyReleased(KeyEvent e) {
         char keyChar = e.getKeyChar();
+        pressedKeys.remove(keyChar); // Remove from pressed keys set
+
         int index = getNoteIndexFromKeyChar(keyChar);
         if (index != -1) {
             String note = NOTES[index];

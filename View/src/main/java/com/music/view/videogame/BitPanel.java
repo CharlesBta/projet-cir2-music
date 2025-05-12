@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class BitPanel extends JLayeredPane implements KeyListener, FocusListener {
 
@@ -20,6 +21,8 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
 
     private HashMap<String, JButton> noteToButton = new HashMap<>();
     private IController controller;
+    private JLabel noteLabel;
+    private HashSet<Character> pressedKeys = new HashSet<>();
 
     public BitPanel(IController controller) {
         this.controller = controller;
@@ -68,6 +71,16 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
             gbc.gridx = i;
             add(bit, gbc);
         }
+
+        // Add note display label
+        noteLabel = new JLabel(" ", SwingConstants.CENTER);
+        noteLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        noteLabel.setPreferredSize(new Dimension(100, 30)); // Fixed size to prevent flickering
+        noteLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add padding
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = BIT_NOTES.length; // Span across all columns
+        add(noteLabel, gbc);
     }
 
     private JButton createBit(String note) {
@@ -112,6 +125,10 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
         bit.setBackground(null);
         if (controller != null && note != null) {
             controller.stopNote(0, note);
+            // Use a space instead of empty string to maintain label visibility
+            if (pressedKeys.isEmpty()) {
+                noteLabel.setText(" ");
+            }
         }
     }
 
@@ -119,6 +136,8 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
         bit.setBackground(Color.GRAY);
         if (controller != null && note != null) {
             controller.playNote(0, note);
+            // Update the label to show the played note
+            noteLabel.setText(note);
         }
 
         Timer timer = new Timer(200, e -> bit.setBackground(null));
@@ -136,12 +155,19 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
             return; // Ignore key events if saving
         }
         char keyChar = e.getKeyChar();
-        int index = getNoteIndexFromKeyChar(keyChar);
-        if (index != -1) {
-            String note = BIT_NOTES[index];
-            JButton bit = noteToButton.get(note);
-            if (bit != null) {
-                handleBitPress(bit, note);
+
+        // Only process the key if it's not already pressed
+        if (!pressedKeys.contains(keyChar)) {
+            int index = getNoteIndexFromKeyChar(keyChar);
+            if (index != -1) {
+                String note = BIT_NOTES[index];
+                JButton bit = noteToButton.get(note);
+                if (bit != null) {
+                    pressedKeys.add(keyChar); // Add to pressed keys set
+                    handleBitPress(bit, note);
+                    // Always update the note label with the most recently pressed key
+                    noteLabel.setText(note);
+                }
             }
         }
     }
@@ -149,6 +175,8 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
     @Override
     public void keyReleased(KeyEvent e) {
         char keyChar = e.getKeyChar();
+        pressedKeys.remove(keyChar); // Remove from pressed keys set
+
         int index = getNoteIndexFromKeyChar(keyChar);
         if (index != -1) {
             String note = BIT_NOTES[index];

@@ -16,6 +16,7 @@ public class PianoPanel extends JLayeredPane {
     private int numberOfPanels;
     private JComboBox<String> pianoSelector;
     private PianoKeyPanel activePianoPanel;
+    private JLabel noteLabel;
 
     public PianoPanel(IController controller) {
         this.controller = controller;
@@ -50,6 +51,14 @@ public class PianoPanel extends JLayeredPane {
 
         pianoContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         mainPanel.add(pianoContainer);
+
+        // Add note display label
+        noteLabel = new JLabel(" ", SwingConstants.CENTER);
+        noteLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        noteLabel.setPreferredSize(new Dimension(100, 30)); // Fixed size to prevent flickering
+        noteLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add padding
+        noteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(noteLabel);
 
         mainPanel.add(Box.createVerticalGlue()); // Espace flexible en dessous
 
@@ -90,7 +99,7 @@ public class PianoPanel extends JLayeredPane {
 
     private void addPianoKeyPanels(int numberOfPanels) {
         for (int i = 0; i < numberOfPanels; i++) {
-            PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, i);
+            PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, i, this);
             pianoContainer.add(pianoKeyPanel);
             pianoSelector.addItem("Piano " + (i + 1));
         }
@@ -103,7 +112,7 @@ public class PianoPanel extends JLayeredPane {
         if (numberOfPanels >= 3 ) {
             return;
         }
-        PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, numberOfPanels);
+        PianoKeyPanel pianoKeyPanel = new PianoKeyPanel(controller, numberOfPanels, this);
         pianoContainer.add(pianoKeyPanel);
         pianoSelector.addItem("Piano " + (numberOfPanels + 1));
         updateActivePianoPanel();
@@ -131,6 +140,20 @@ public class PianoPanel extends JLayeredPane {
         }
         if (selectedIndex != -1) {
             activePianoPanel = (PianoKeyPanel) pianoContainer.getComponent(selectedIndex);
+        }
+    }
+
+    /**
+     * Updates the note label with the given note
+     * @param note The note to display, or empty string to clear
+     */
+    public void updateNoteLabel(String note, int octave) {
+        if (noteLabel != null) {
+            // Use a space instead of empty string to maintain label visibility
+            if (octave == -1) {
+                noteLabel.setText(" ");
+            }
+            noteLabel.setText(note.isEmpty() ? " " : note + (octave+1));
         }
     }
 }
