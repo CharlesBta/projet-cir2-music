@@ -95,9 +95,6 @@ public class RecordPanel extends JLayeredPane {
         return button;
     }
 
-    /**
-     * Updates the recording indicator visibility based on the controller's recording state
-     */
     private void updateRecordingIndicator() {
         recordingIndicator.setVisible(controller.isRecording());
     }

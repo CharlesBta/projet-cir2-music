@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class PianoKeyPanel extends JLayeredPane {
 
@@ -24,9 +25,12 @@ public class PianoKeyPanel extends JLayeredPane {
     private HashMap<String, JButton> noteToButton = new HashMap<>();
     private IController controller;
     private boolean isActive = false;
+    private PianoPanel parentPanel;
+    private HashSet<Character> pressedKeys = new HashSet<>();
 
-    public PianoKeyPanel(IController controller, int octave) {
+    public PianoKeyPanel(IController controller, int octave, PianoPanel parentPanel) {
         this.controller = controller;
+        this.parentPanel = parentPanel;
         setLayout(null);
         setPreferredSize(new Dimension(420, 200));
         initializeKeys();
@@ -83,6 +87,10 @@ public class PianoKeyPanel extends JLayeredPane {
         key.setBackground(PRESSED_COLOR);
         if (controller != null && note != null) {
             controller.playNote(this.octave, note); // Ajuster si nécessaire
+            // Update the note label in the parent panel
+            if (parentPanel != null) {
+                parentPanel.updateNoteLabel(note, octave);
+            }
         }
     }
 
@@ -94,17 +102,30 @@ public class PianoKeyPanel extends JLayeredPane {
         }
         if (controller != null && note != null) {
             controller.stopNote(this.octave, note); // Ajuster si nécessaire
+            // Clear the note label in the parent panel
+            if (parentPanel != null && pressedKeys.isEmpty()) {
+                parentPanel.updateNoteLabel("", -1);
+            }
         }
     }
 
     public void handleKeyPress(KeyEvent e) {
-        if (!controller.isSaving()){
+        if (!controller.isSaving()) {
             char keyChar = e.getKeyChar();
-            String note = getNoteFromKeyChar(Character.toLowerCase(keyChar));
-            if (note != null) {
-                JButton keyButton = noteToButton.get(note);
-                if (keyButton != null) {
-                    handleMousePress(keyButton, note);
+
+            // Only process the key if it's not already pressed
+            if (!pressedKeys.contains(keyChar)) {
+                String note = getNoteFromKeyChar(Character.toLowerCase(keyChar));
+                if (note != null) {
+                    JButton keyButton = noteToButton.get(note);
+                    if (keyButton != null) {
+                        pressedKeys.add(keyChar); // Add to pressed keys set
+                        handleMousePress(keyButton, note);
+                        // Always update the parent panel's note display with the most recently pressed key
+                        if (parentPanel != null) {
+                            parentPanel.updateNoteLabel(note, octave);
+                        }
+                    }
                 }
             }
         }
@@ -112,6 +133,8 @@ public class PianoKeyPanel extends JLayeredPane {
 
     public void handleKeyRelease(KeyEvent e) {
         char keyChar = e.getKeyChar();
+        pressedKeys.remove(keyChar); // Remove from pressed keys set
+
         String note = getNoteFromKeyChar(keyChar);
         if (note != null) {
             JButton keyButton = noteToButton.get(note);
