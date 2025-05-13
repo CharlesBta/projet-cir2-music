@@ -2,6 +2,7 @@ package com.music.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.music.controller.IController;
+import com.music.view.drumkit.DrumPanel;
 import com.music.view.piano.PianoPanel;
 import com.music.view.videogame.BitPanel;
 import com.music.view.xylophone.XylophonePanel;
@@ -47,7 +48,7 @@ public class Header {
 
         JButton headerButton = createStyledButton("Instruments");
         headerPanel.add(headerButton);
-        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Video Game"});
+        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Video Game", "Drum Kit"});
 
         JButton openButton = createStyledButton("Ouvrir");
         openButton.addMouseListener(new MouseAdapter() {
@@ -106,6 +107,11 @@ public class Header {
                         BitPanel bitPanel = new BitPanel(controller);
                         bitPanel.init();
                         frame.updateFrameContent(bitPanel);
+                        break;
+                    case "Drum Kit":
+                        DrumPanel drumPanel = new DrumPanel(controller);
+                        drumPanel.init();
+                        frame.updateFrameContent(drumPanel);
                         break;
                 }
             });
