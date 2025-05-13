@@ -4,6 +4,8 @@ import com.music.controller.IController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -93,6 +95,7 @@ public class OuvrirPartition extends JLayeredPane {
         add(fileNameLabel, gbc);
 
         JButton playButton = createStyledButtonWithIcon("view/src/main/resources/play.png", ICON_WIDTH, ICON_HEIGHT, "Play");
+        JButton stopButton = createStyledButtonWithIcon("view/src/main/resources/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
 
         playButton.addActionListener(
                 e -> {
@@ -101,8 +104,16 @@ public class OuvrirPartition extends JLayeredPane {
                 }
         );
 
+        stopButton.addActionListener(
+                e -> {
+                    System.out.println("Stop button clicked");
+                    reader.stop();
+                }
+        );
+
         JPanel controlPanel = new JPanel();
         controlPanel.add(playButton);
+        controlPanel.add(stopButton);
 
 
         gbc.gridx = 0;
@@ -112,6 +123,22 @@ public class OuvrirPartition extends JLayeredPane {
         add(controlPanel, gbc);
 
         setBackground(BACKGROUND_COLOR);
+
+        // Add component listener to detect when this component is hidden or removed
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                // Stop playback when the component is hidden
+                reader.stop();
+            }
+        });
+    }
+
+    // Method to stop playback, can be called externally
+    public void stopPlayback() {
+        if (reader != null) {
+            reader.stop();
+        }
     }
 
     public void setInstrument(String instrument) {

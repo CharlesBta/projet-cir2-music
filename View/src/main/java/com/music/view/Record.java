@@ -68,16 +68,18 @@ public class Record {
         }
         isRecording = false;
         controller.setIsRecording(isRecording);
+        if (actions.isEmpty()) {
+            JOptionPane.showMessageDialog(panel, "Aucune action enregistrée.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (panel.getKeyListeners().length > 0) {
             panel.removeKeyListener(panel.getKeyListeners()[0]);
         }
         panel.setFocusable(false);
         Gson gson = new Gson();
         String actionsJson = gson.toJson(actions);
-        if (!actions.isEmpty()){
-            if (actions.getFirst() instanceof Pause) {
-                actions.removeFirst();
-            }
+        if (actions.getFirst() instanceof Pause) {
+            actions.removeFirst();
         }
         saveJsonToFile(actionsJson);
     }

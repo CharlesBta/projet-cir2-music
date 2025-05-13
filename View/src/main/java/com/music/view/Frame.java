@@ -53,6 +53,14 @@ public class Frame extends JFrame {
     }
 
     public void updateFrameContent(JLayeredPane newContent) {
+        // Stop any music playback in OuvrirPartition instances
+        Component[] components = layeredPane.getComponents();
+        for (Component component : components) {
+            if (component instanceof OuvrirPartition) {
+                ((OuvrirPartition) component).stopPlayback();
+            }
+        }
+
         layeredPane.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -68,8 +76,8 @@ public class Frame extends JFrame {
         layeredPane.repaint();
 
         // Remove any existing RecordPanel
-        Component[] components = getContentPane().getComponents();
-        for (Component component : components) {
+        Component[] contentComponents = getContentPane().getComponents();
+        for (Component component : contentComponents) {
             if (component instanceof RecordPanel) {
                 remove(component);
             }
