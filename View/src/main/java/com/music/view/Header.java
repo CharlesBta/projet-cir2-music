@@ -2,6 +2,7 @@ package com.music.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.music.controller.IController;
+import com.music.view.drumkit.DrumPanel;
 import com.music.view.piano.PianoPanel;
 import com.music.view.videogame.BitPanel;
 import com.music.view.wood.WoodPanel;
@@ -48,7 +49,7 @@ public class Header {
 
         JButton headerButton = createStyledButton("Instruments");
         headerPanel.add(headerButton);
-        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Video Game", "Wood Instrument"});
+        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Video Game", "Drum Kit", "Wood Instrument"});
 
         JButton openButton = createStyledButton("Ouvrir");
         openButton.addMouseListener(new MouseAdapter() {
@@ -111,11 +112,18 @@ public class Header {
                         bitPanel.init();
                         frame.updateFrameContent(bitPanel);
                         break;
-                        case "Wood Instrument":
+                    case "Drum Kit":
+                        DrumPanel drumPanel = new DrumPanel(controller);
+                        controller.setOctave(5);
+                        drumPanel.init();
+                        frame.updateFrameContent(drumPanel);
+                        break;
+                    case "Wood Instrument":
                         WoodPanel woodPanel = new WoodPanel(controller);
                         controller.setOctave(7);
                         woodPanel.init();
                         frame.updateFrameContent(woodPanel);
+
                 }
             });
             popupMenu.add(menuItem);

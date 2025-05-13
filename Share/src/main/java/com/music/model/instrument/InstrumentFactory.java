@@ -3,6 +3,7 @@ package com.music.model.instrument;
 import com.music.model.instrument.IInstrument;
 import com.music.model.instrument.Synthesizer;
 import com.music.model.instrument.VideoGame;
+import com.music.model.instrument.DrumKit;
 
 public abstract class InstrumentFactory {
     public static IInstrument getInstrument(String instrument) {
@@ -16,6 +17,7 @@ public abstract class InstrumentFactory {
             case "Acoustic Guitar" -> new Synthesizer(velocity, 24);
             case "Electric Bass" -> new Synthesizer(velocity, 33);
             case "Video Game" -> new VideoGame();
+            case "Drum Kit" -> new DrumKit();
             case "Wood Instrument" -> new Synthesizer(velocity, 116);
             default -> null;
         };

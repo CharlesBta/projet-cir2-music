@@ -63,6 +63,9 @@ public class Record {
     }
 
     public void stop() {
+        if (!isRecording) {
+            return;
+        }
         isRecording = false;
         controller.setIsRecording(isRecording);
         if (panel.getKeyListeners().length > 0) {
