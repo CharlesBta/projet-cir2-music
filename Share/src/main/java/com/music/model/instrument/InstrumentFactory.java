@@ -16,6 +16,7 @@ public abstract class InstrumentFactory {
             case "Acoustic Guitar" -> new Synthesizer(velocity, 24);
             case "Electric Bass" -> new Synthesizer(velocity, 33);
             case "Video Game" -> new VideoGame();
+            case "Wood Instrument" -> new Synthesizer(velocity, 116);
             default -> null;
         };
     }
