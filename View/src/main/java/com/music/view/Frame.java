@@ -31,7 +31,7 @@ public class Frame extends JFrame {
     }
 
     private void createAndShowFrame() {
-        setTitle("Piano Virtuel");
+        setTitle("Music Lab");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
