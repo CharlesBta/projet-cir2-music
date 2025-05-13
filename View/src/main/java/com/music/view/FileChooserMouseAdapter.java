@@ -22,6 +22,14 @@ public class FileChooserMouseAdapter extends MouseAdapter {
         loadLastDirectory();
     }
 
+    private void loadLastDirectory() {
+        Preferences prefs = Preferences.userNodeForPackage(Header.class);
+        String path = prefs.get("lastDirectory", null);
+        if (path != null) {
+            lastDirectory = new File(path);
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         JFileChooser fileChooser = new JFileChooser();
@@ -55,7 +63,16 @@ public class FileChooserMouseAdapter extends MouseAdapter {
                 });
             } else {
                 showErrorDialog("Erreur: Veuillez sélectionner un fichier .json ou .txt");
+                SwingUtilities.invokeLater(() -> {
+                    Menu menu = new Menu();
+                    frame.updateFrameContent(menu);
+                });
             }
+        } else if (result == JFileChooser.CANCEL_OPTION) {
+            SwingUtilities.invokeLater(() -> {
+                Menu menu = new Menu();
+                frame.updateFrameContent(menu);
+            });
         }
     }
 
@@ -74,22 +91,14 @@ public class FileChooserMouseAdapter extends MouseAdapter {
         return fileName.endsWith(".json") || fileName.endsWith(".txt");
     }
 
-    private void showErrorDialog(String message) {
-        JOptionPane.showMessageDialog(null, message, "Erreur", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void loadLastDirectory() {
-        Preferences prefs = Preferences.userNodeForPackage(Header.class);
-        String path = prefs.get("lastDirectory", null);
-        if (path != null) {
-            lastDirectory = new File(path);
-        }
-    }
-
     private void saveLastDirectory() {
         Preferences prefs = Preferences.userNodeForPackage(Header.class);
         if (lastDirectory != null) {
             prefs.put("lastDirectory", lastDirectory.getAbsolutePath());
         }
+    }
+
+    private void showErrorDialog(String message) {
+        JOptionPane.showMessageDialog(null, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
 }
