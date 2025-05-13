@@ -43,7 +43,7 @@ public class OuvrirPartition extends JLayeredPane {
         styleAsButton(instrumentSelector);
 
         JPopupMenu popupMenu = new JPopupMenu();
-        String[] instruments = {"Piano", "Xylophone", "Video Game"};
+        String[] instruments = {"Piano", "Xylophone", "Video Game", "Wood Instrument"};
         for (String instrument : instruments) {
             JMenuItem item = new JMenuItem(instrument);
             item.addActionListener(e -> setInstrument(instrument));

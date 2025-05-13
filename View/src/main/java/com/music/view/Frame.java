@@ -76,9 +76,10 @@ public class Frame extends JFrame {
         }
 
         // Only add RecordPanel if the content is an instrument panel
-        boolean isInstrumentPanel = newContent instanceof com.music.view.piano.PianoPanel || 
-                                   newContent instanceof com.music.view.xylophone.XylophonePanel || 
-                                   newContent instanceof com.music.view.videogame.BitPanel;
+        boolean isInstrumentPanel = newContent instanceof com.music.view.piano.PianoPanel ||
+                newContent instanceof com.music.view.xylophone.XylophonePanel ||
+                newContent instanceof com.music.view.videogame.BitPanel ||
+                newContent instanceof com.music.view.wood.WoodPanel;
 
         if (isInstrumentPanel) {
             RecordPanel recordPanel = new RecordPanel(controller);

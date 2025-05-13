@@ -5,6 +5,7 @@ import com.music.controller.IController;
 import com.music.view.drumkit.DrumPanel;
 import com.music.view.piano.PianoPanel;
 import com.music.view.videogame.BitPanel;
+import com.music.view.wood.WoodPanel;
 import com.music.view.xylophone.XylophonePanel;
 import lombok.Getter;
 
@@ -48,7 +49,7 @@ public class Header {
 
         JButton headerButton = createStyledButton("Instruments");
         headerPanel.add(headerButton);
-        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Video Game", "Drum Kit"});
+        addPopupMenuToButton(headerButton, new String[]{"Piano", "Xylophone", "Video Game", "Drum Kit", "Wood Instrument"});
 
         JButton openButton = createStyledButton("Ouvrir");
         openButton.addMouseListener(new MouseAdapter() {
@@ -95,24 +96,34 @@ public class Header {
                 switch (item) {
                     case "Piano":
                         PianoPanel pianoPanel = new PianoPanel(controller);
+                        controller.setOctave(5);
                         pianoPanel.init();
                         frame.updateFrameContent(pianoPanel);
                         break;
                     case "Xylophone":
                         XylophonePanel xylophonePanel = new XylophonePanel(controller);
+                        controller.setOctave(5);
                         xylophonePanel.init();
                         frame.updateFrameContent(xylophonePanel);
                         break;
                     case "Video Game":
                         BitPanel bitPanel = new BitPanel(controller);
+                        controller.setOctave(5);
                         bitPanel.init();
                         frame.updateFrameContent(bitPanel);
                         break;
                     case "Drum Kit":
                         DrumPanel drumPanel = new DrumPanel(controller);
+                        controller.setOctave(5);
                         drumPanel.init();
                         frame.updateFrameContent(drumPanel);
                         break;
+                    case "Wood Instrument":
+                        WoodPanel woodPanel = new WoodPanel(controller);
+                        controller.setOctave(7);
+                        woodPanel.init();
+                        frame.updateFrameContent(woodPanel);
+
                 }
             });
             popupMenu.add(menuItem);
