@@ -85,6 +85,3 @@ De nouveaux instruments peuvent être ajoutés en implémentant l'interface `IIn
 - Lombok : Utilisé pour réduire le code répétitif
 - Java Sound API : Utilisé pour la lecture audio
 
-## Licence
-
-[Ajoutez vos informations de licence ici]
