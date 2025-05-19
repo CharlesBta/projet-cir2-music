@@ -1,3 +1,4 @@
+![Menu de l'application](./View/src/main/resources/image_menu.jpg)
 # Projet d'Application Musicale
 
 Ce dépôt contient une application musicale basée sur Java qui permet aux utilisateurs de jouer différents instruments de musique, d'enregistrer des performances et de les sauvegarder. L'application suit le modèle d'architecture Modèle-Vue-Contrôleur (MVC).
