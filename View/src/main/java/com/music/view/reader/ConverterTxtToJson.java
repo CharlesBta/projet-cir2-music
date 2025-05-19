@@ -1,4 +1,4 @@
-package com.music.view;
+package com.music.view.reader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

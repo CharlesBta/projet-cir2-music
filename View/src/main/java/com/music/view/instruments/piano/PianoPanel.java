@@ -1,4 +1,4 @@
-package com.music.view.piano;
+package com.music.view.instruments.piano;
 
 import com.music.controller.IController;
 
@@ -17,6 +17,7 @@ public class PianoPanel extends JLayeredPane {
     private JComboBox<String> pianoSelector;
     private PianoKeyPanel activePianoPanel;
     private JLabel noteLabel;
+    private KeyEventDispatcher keyEventDispatcher;
 
     public PianoPanel(IController controller) {
         this.controller = controller;
@@ -80,19 +81,27 @@ public class PianoPanel extends JLayeredPane {
         });
 
         // Utiliser un KeyEventDispatcher pour capturer les événements de clavier au niveau global
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        keyEventDispatcher = new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 if (activePianoPanel != null) {
-                    if (e.getID() == KeyEvent.KEY_PRESSED) {
-                        activePianoPanel.handleKeyPress(e);
-                    } else if (e.getID() == KeyEvent.KEY_RELEASED) {
-                        activePianoPanel.handleKeyRelease(e);
+                    // Get the selected octave from the pianoSelector
+                    int selectedOctave = pianoSelector.getSelectedIndex();
+                    if (selectedOctave != -1) {
+                        // Get the piano panel for the selected octave
+                        PianoKeyPanel selectedPianoPanel = (PianoKeyPanel) pianoContainer.getComponent(selectedOctave);
+
+                        if (e.getID() == KeyEvent.KEY_PRESSED) {
+                            selectedPianoPanel.handleKeyPress(e);
+                        } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+                            selectedPianoPanel.handleKeyRelease(e);
+                        }
                     }
                 }
                 return false;
             }
-        });
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
 
         add(mainPanel, BorderLayout.CENTER);
     }
@@ -150,10 +159,21 @@ public class PianoPanel extends JLayeredPane {
     public void updateNoteLabel(String note, int octave) {
         if (noteLabel != null) {
             // Use a space instead of empty string to maintain label visibility
-            if (octave == -1) {
+            if (octave == -1 || note.isEmpty()) {
                 noteLabel.setText(" ");
+            } else {
+                noteLabel.setText(note + (octave+1));
             }
-            noteLabel.setText(note.isEmpty() ? " " : note + (octave+1));
+        }
+    }
+
+    /**
+     * Cleanup resources when the panel is no longer in use
+     */
+    public void cleanup() {
+        if (keyEventDispatcher != null) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+            keyEventDispatcher = null;
         }
     }
 }

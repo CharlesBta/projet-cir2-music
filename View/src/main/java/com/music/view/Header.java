@@ -2,11 +2,12 @@ package com.music.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.music.controller.IController;
-import com.music.view.drumkit.DrumPanel;
-import com.music.view.piano.PianoPanel;
-import com.music.view.videogame.BitPanel;
-import com.music.view.wood.WoodPanel;
-import com.music.view.xylophone.XylophonePanel;
+import com.music.view.instruments.drumkit.DrumPanel;
+import com.music.view.instruments.piano.PianoPanel;
+import com.music.view.instruments.videogame.BitPanel;
+import com.music.view.instruments.wood.WoodPanel;
+import com.music.view.instruments.xylophone.XylophonePanel;
+import com.music.view.reader.FileChooserMouseAdapter;
 import lombok.Getter;
 
 import javax.swing.*;

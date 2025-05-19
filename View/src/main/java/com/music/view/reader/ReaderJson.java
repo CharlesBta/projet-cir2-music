@@ -1,4 +1,4 @@
-package com.music.view;
+package com.music.view.reader;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

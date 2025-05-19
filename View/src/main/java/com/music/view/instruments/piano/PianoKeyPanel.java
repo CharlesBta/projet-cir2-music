@@ -1,4 +1,4 @@
-package com.music.view.piano;
+package com.music.view.instruments.piano;
 
 import com.music.controller.IController;
 
@@ -120,7 +120,15 @@ public class PianoKeyPanel extends JLayeredPane {
                     JButton keyButton = noteToButton.get(note);
                     if (keyButton != null) {
                         pressedKeys.add(keyChar); // Add to pressed keys set
-                        handleMousePress(keyButton, note);
+
+                        // Change the visual appearance of the key
+                        keyButton.setBackground(PRESSED_COLOR);
+
+                        // Play the note using the controller with this panel's octave
+                        if (controller != null) {
+                            controller.playNote(this.octave, note);
+                        }
+
                         // Always update the parent panel's note display with the most recently pressed key
                         if (parentPanel != null) {
                             parentPanel.updateNoteLabel(note, octave);
@@ -135,11 +143,26 @@ public class PianoKeyPanel extends JLayeredPane {
         char keyChar = e.getKeyChar();
         pressedKeys.remove(keyChar); // Remove from pressed keys set
 
-        String note = getNoteFromKeyChar(keyChar);
+        String note = getNoteFromKeyChar(Character.toLowerCase(keyChar));
         if (note != null) {
             JButton keyButton = noteToButton.get(note);
             if (keyButton != null) {
-                handleMouseRelease(keyButton, note);
+                // Restore the key's appearance
+                if (isActive) {
+                    keyButton.setBackground(keyButton.getForeground() == Color.BLACK ? ACTIVE_WHITE : ACTIVE_BLACK);
+                } else {
+                    keyButton.setBackground(keyButton.getForeground() == Color.BLACK ? Color.WHITE : Color.BLACK);
+                }
+
+                // Stop the note using the controller with this panel's octave
+                if (controller != null) {
+                    controller.stopNote(this.octave, note);
+                }
+
+                // Clear the note label in the parent panel if no keys are pressed
+                if (parentPanel != null && pressedKeys.isEmpty()) {
+                    parentPanel.updateNoteLabel("", -1);
+                }
             }
         }
     }

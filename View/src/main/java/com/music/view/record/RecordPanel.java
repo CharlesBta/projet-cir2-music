@@ -1,4 +1,4 @@
-package com.music.view;
+package com.music.view.record;
 
 import com.music.controller.IController;
 

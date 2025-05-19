@@ -1,4 +1,4 @@
-package com.music.view.videogame;
+package com.music.view.instruments.videogame;
 
 import com.music.controller.IController;
 
@@ -23,6 +23,7 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
     private IController controller;
     private JLabel noteLabel;
     private HashSet<Character> pressedKeys = new HashSet<>();
+    private KeyEventDispatcher keyEventDispatcher;
 
     public BitPanel(IController controller) {
         this.controller = controller;
@@ -43,7 +44,7 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
         initializeBits();
 
         // Utiliser un KeyEventDispatcher pour capturer les événements de clavier au niveau global
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        keyEventDispatcher = new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 synchronized (BitPanel.this) { // ou XylophonePanel.this
@@ -55,7 +56,8 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
                 }
                 return false;
             }
-        });
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
     }
 
 
@@ -203,5 +205,15 @@ public class BitPanel extends JLayeredPane implements KeyListener, FocusListener
 
     @Override
     public void focusLost(FocusEvent e) {
+    }
+
+    /**
+     * Cleanup resources when the panel is no longer in use
+     */
+    public void cleanup() {
+        if (keyEventDispatcher != null) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+            keyEventDispatcher = null;
+        }
     }
 }

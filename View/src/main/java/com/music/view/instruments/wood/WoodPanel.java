@@ -1,4 +1,4 @@
-package com.music.view.wood;
+package com.music.view.instruments.wood;
 
 import com.music.controller.IController;
 
@@ -18,6 +18,7 @@ public class WoodPanel extends JLayeredPane implements KeyListener, FocusListene
     private IController controller;
     private JLabel noteLabel;
     private HashSet<Character> pressedKeys = new HashSet<>();
+    private KeyEventDispatcher keyEventDispatcher;
 
     public WoodPanel(IController controller) {
         this.controller = controller;
@@ -38,7 +39,7 @@ public class WoodPanel extends JLayeredPane implements KeyListener, FocusListene
         initializeBits();
 
         // Utiliser un KeyEventDispatcher pour capturer les événements de clavier au niveau global
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        keyEventDispatcher = new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 synchronized (WoodPanel.this) { // ou XylophonePanel.this
@@ -50,7 +51,8 @@ public class WoodPanel extends JLayeredPane implements KeyListener, FocusListene
                 }
                 return false;
             }
-        });
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
     }
 
 
@@ -198,5 +200,15 @@ public class WoodPanel extends JLayeredPane implements KeyListener, FocusListene
 
     @Override
     public void focusLost(FocusEvent e) {
+    }
+
+    /**
+     * Cleanup resources when the panel is no longer in use
+     */
+    public void cleanup() {
+        if (keyEventDispatcher != null) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+            keyEventDispatcher = null;
+        }
     }
 }

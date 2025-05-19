@@ -2,6 +2,13 @@ package com.music.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.music.controller.IController;
+import com.music.view.instruments.drumkit.DrumPanel;
+import com.music.view.instruments.piano.PianoPanel;
+import com.music.view.instruments.videogame.BitPanel;
+import com.music.view.instruments.wood.WoodPanel;
+import com.music.view.instruments.xylophone.XylophonePanel;
+import com.music.view.reader.OuvrirPartition;
+import com.music.view.record.RecordPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,11 +60,27 @@ public class Frame extends JFrame {
     }
 
     public void updateFrameContent(JLayeredPane newContent) {
-        // Stop any music playback in OuvrirPartition instances
+        // Stop any music playback in OuvrirPartition instances and cleanup resources
         Component[] components = layeredPane.getComponents();
         for (Component component : components) {
             if (component instanceof OuvrirPartition) {
                 ((OuvrirPartition) component).stopPlayback();
+            }
+            // Cleanup instrument panel resources
+            if (component instanceof DrumPanel) {
+                ((DrumPanel) component).cleanup();
+            }
+            if (component instanceof PianoPanel) {
+                ((PianoPanel) component).cleanup();
+            }
+            if (component instanceof BitPanel) {
+                ((BitPanel) component).cleanup();
+            }
+            if (component instanceof WoodPanel) {
+                ((WoodPanel) component).cleanup();
+            }
+            if (component instanceof XylophonePanel) {
+                ((XylophonePanel) component).cleanup();
             }
         }
 
@@ -84,11 +107,11 @@ public class Frame extends JFrame {
         }
 
         // Only add RecordPanel if the content is an instrument panel
-        boolean isInstrumentPanel = newContent instanceof com.music.view.piano.PianoPanel ||
-                newContent instanceof com.music.view.xylophone.XylophonePanel ||
-                newContent instanceof com.music.view.videogame.BitPanel ||
-                newContent instanceof com.music.view.wood.WoodPanel ||
-                newContent instanceof com.music.view.drumkit.DrumPanel;
+        boolean isInstrumentPanel = newContent instanceof PianoPanel ||
+                newContent instanceof XylophonePanel ||
+                newContent instanceof BitPanel ||
+                newContent instanceof WoodPanel ||
+                newContent instanceof DrumPanel;
 
         if (isInstrumentPanel) {
             RecordPanel recordPanel = new RecordPanel(controller);

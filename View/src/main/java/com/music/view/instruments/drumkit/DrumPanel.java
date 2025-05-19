@@ -1,4 +1,4 @@
-package com.music.view.drumkit;
+package com.music.view.instruments.drumkit;
 
 import com.music.controller.IController;
 
@@ -14,6 +14,7 @@ public class DrumPanel extends JLayeredPane implements KeyListener, FocusListene
     private final Map<JButton, DrumSound> drumButtons;
     private final Map<Character, JButton> keyToButton;
     private final HashSet<Character> pressedKeys = new HashSet<>();
+    private KeyEventDispatcher keyEventDispatcher;
 
     // Class to hold drum sound information
     private static class DrumSound {
@@ -53,7 +54,7 @@ public class DrumPanel extends JLayeredPane implements KeyListener, FocusListene
         addFocusListener(this);
 
         // Use a KeyEventDispatcher to capture keyboard events globally
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        keyEventDispatcher = new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 synchronized (DrumPanel.this) {
@@ -65,7 +66,8 @@ public class DrumPanel extends JLayeredPane implements KeyListener, FocusListene
                 }
                 return false;
             }
-        });
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
     }
 
     @Override
@@ -174,5 +176,15 @@ public class DrumPanel extends JLayeredPane implements KeyListener, FocusListene
 
     @Override
     public void focusLost(FocusEvent e) {
+    }
+
+    /**
+     * Cleanup resources when the panel is no longer in use
+     */
+    public void cleanup() {
+        if (keyEventDispatcher != null) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+            keyEventDispatcher = null;
+        }
     }
 }

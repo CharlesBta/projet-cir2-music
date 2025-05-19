@@ -1,7 +1,6 @@
-package com.music.view;
+package com.music.view.record;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.music.Note;
 import com.music.controller.IController;
 

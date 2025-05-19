@@ -1,4 +1,4 @@
-package com.music.view.xylophone;
+package com.music.view.instruments.xylophone;
 
 import com.music.controller.IController;
 
@@ -32,6 +32,7 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
     private IController controller;
     private JLabel noteLabel;
     private HashSet<Character> pressedKeys = new HashSet<>();
+    private KeyEventDispatcher keyEventDispatcher;
 
     public XylophonePanel(IController controller) {
         this.controller = controller;
@@ -52,7 +53,7 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
         initializeBars();
 
         // Utiliser un KeyEventDispatcher pour capturer les événements de clavier au niveau global
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        keyEventDispatcher = new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 synchronized (XylophonePanel.this) {
@@ -64,7 +65,8 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
                 }
                 return false;
             }
-        });
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
         setBackground(Color.WHITE);
     }
 
@@ -215,5 +217,15 @@ public class XylophonePanel extends JLayeredPane implements KeyListener, FocusLi
     @Override
     public void focusLost(FocusEvent e) {
         // Pas utilisé
+    }
+
+    /**
+     * Cleanup resources when the panel is no longer in use
+     */
+    public void cleanup() {
+        if (keyEventDispatcher != null) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+            keyEventDispatcher = null;
+        }
     }
 }

@@ -1,6 +1,8 @@
-package com.music.view;
+package com.music.view.reader;
 
 import com.music.controller.IController;
+import com.music.view.Header;
+import com.music.view.Menu;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,11 +14,11 @@ import java.util.prefs.Preferences;
 
 public class FileChooserMouseAdapter extends MouseAdapter {
 
-    private final Frame frame;
+    private final com.music.view.Frame frame;
     private final IController controller;
     private File lastDirectory;
 
-    public FileChooserMouseAdapter(Frame frame, IController controller) {
+    public FileChooserMouseAdapter(com.music.view.Frame frame, IController controller) {
         this.frame = frame;
         this.controller = controller;
         loadLastDirectory();
@@ -64,13 +66,13 @@ public class FileChooserMouseAdapter extends MouseAdapter {
             } else {
                 showErrorDialog("Erreur: Veuillez sélectionner un fichier .json ou .txt");
                 SwingUtilities.invokeLater(() -> {
-                    Menu menu = new Menu();
+                    com.music.view.Menu menu = new com.music.view.Menu();
                     frame.updateFrameContent(menu);
                 });
             }
         } else if (result == JFileChooser.CANCEL_OPTION) {
             SwingUtilities.invokeLater(() -> {
-                Menu menu = new Menu();
+                com.music.view.Menu menu = new Menu();
                 frame.updateFrameContent(menu);
             });
         }
