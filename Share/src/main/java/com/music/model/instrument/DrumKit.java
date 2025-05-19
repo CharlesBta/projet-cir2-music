@@ -43,7 +43,7 @@ public class DrumKit implements IInstrument {
                 // Reset and play the clip
                 clip.setFramePosition(0);
                 clip.start();
-                
+
                 // Add a listener to handle when the clip finishes playing
                 clip.addLineListener(event -> {
                     if (event.getType() == LineEvent.Type.STOP) {
@@ -68,14 +68,14 @@ public class DrumKit implements IInstrument {
             if (!clipPool.containsKey(note)) {
                 clipPool.put(note, new ArrayList<>());
             }
-            
+
             List<Clip> clips = clipPool.get(note);
-            
+
             // Check if there's an available clip
             if (!clips.isEmpty()) {
                 return clips.remove(0);
             }
-            
+
             // Create a new clip if none are available
             return createNewClip(note);
         }
@@ -84,11 +84,35 @@ public class DrumKit implements IInstrument {
     private Clip createNewClip(int note) {
         try {
             String soundFile = drumSounds.get(note);
-            InputStream is = getClass().getClassLoader().getResourceAsStream("drums/" + soundFile);
+            // Try multiple approaches to load the resource
+            InputStream is = null;
+
+            // Approach 1: Using class loader
+            is = getClass().getClassLoader().getResourceAsStream("drums/" + soundFile);
+
+            // Approach 2: Using absolute path
+            if (is == null) {
+                is = getClass().getClassLoader().getResourceAsStream("/drums/" + soundFile);
+            }
+
+            // Approach 3: Using Thread context class loader
+            if (is == null) {
+                is = Thread.currentThread().getContextClassLoader().getResourceAsStream("drums/" + soundFile);
+            }
+
+            // Approach 4: Using system class loader
+            if (is == null) {
+                is = ClassLoader.getSystemResourceAsStream("drums/" + soundFile);
+            }
+
             if (is == null) {
                 System.err.println("Could not find sound file: drums/" + soundFile);
+                // Print the classpath for debugging
+                System.err.println("Classpath: " + System.getProperty("java.class.path"));
                 return null;
             }
+
+            System.out.println("Successfully loaded sound file: drums/" + soundFile);
 
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(is);
             AudioFormat format = audioInputStream.getFormat();
