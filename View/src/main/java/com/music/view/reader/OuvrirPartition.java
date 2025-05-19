@@ -94,8 +94,8 @@ public class OuvrirPartition extends JLayeredPane {
         gbc.anchor = GridBagConstraints.CENTER;
         add(fileNameLabel, gbc);
 
-        JButton playButton = createStyledButtonWithIcon("view/src/main/resources/play.png", ICON_WIDTH, ICON_HEIGHT, "Play");
-        JButton stopButton = createStyledButtonWithIcon("view/src/main/resources/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
+        JButton playButton = createStyledButtonWithIcon("/play.png", ICON_WIDTH, ICON_HEIGHT, "Play");
+        JButton stopButton = createStyledButtonWithIcon("/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
 
         playButton.addActionListener(
                 e -> {
@@ -159,7 +159,7 @@ public class OuvrirPartition extends JLayeredPane {
     }
 
     private JButton createStyledButtonWithIcon(String path, int width, int height, String tooltip) {
-        ImageIcon icon = new ImageIcon(path);
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImg);

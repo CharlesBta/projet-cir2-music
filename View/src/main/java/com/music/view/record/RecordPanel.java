@@ -23,8 +23,8 @@ public class RecordPanel extends JLayeredPane {
         setLayout(new BorderLayout());
         this.controller = controller;
         record = new Record(controller, this);
-        JButton recordButton = createStyledButtonWithIcon("view/src/main/resources/record.png", ICON_WIDTH, ICON_HEIGHT, "Record");
-        JButton stopButton = createStyledButtonWithIcon("view/src/main/resources/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
+        JButton recordButton = createStyledButtonWithIcon("/record.png", ICON_WIDTH, ICON_HEIGHT, "Record");
+        JButton stopButton = createStyledButtonWithIcon("/stop.png", ICON_WIDTH, ICON_HEIGHT, "Stop");
 
         // Create recording indicator
         recordingIndicator = new JLabel("● RECORDING");
@@ -66,7 +66,7 @@ public class RecordPanel extends JLayeredPane {
     }
 
     private JButton createStyledButtonWithIcon(String path, int width, int height, String tooltip) {
-        ImageIcon icon = new ImageIcon(path);
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImg);
